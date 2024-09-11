@@ -19,10 +19,8 @@ const Page = async () => {
       <Navbar />
       
       <div className="mx-auto mb-10 sm:max-w-xl flex flex-col items-center justify-center  ">
-        <h1 className="text-6xl text-center font-bold sm:text-7xl   ">PRICING</h1>
-        <p className="mt-5 text-gray-600 text-center sm:text-lg">
-        Whether you’re just trying out our service, or need deeper insights, we’ve got you covered
-        </p>
+        <h1 className="text-6xl text-center font-bold sm:text-7xl   ">Plans & Pricing</h1>
+       
        
       </div>
       <div className="mb-14 max-w-[100rem] mx-auto">
