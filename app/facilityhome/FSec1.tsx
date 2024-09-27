@@ -53,12 +53,12 @@ function Sec1() {
           Clariti offers clear interpretations for your patients lab reports. We empower healthcare providers to make informed decisions to improve patient outcomes with evidence-based insights.
           </p>
           <div className="flex gap-4  items-start pt-4">
-          <Link href="/signup" className=''>
+          <Link href="/register/facility" className=''>
             <button className="text-[#ffffff] active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
               Upload Lab Results
             </button>
           </Link>
-          <Link href="/signup" className=''>
+          <Link href="/register/facility" className=''>
             <button className="text-[#ffffff] active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
             Try it for free
             </button>

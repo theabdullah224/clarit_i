@@ -1,44 +1,137 @@
+// app/components/Navbar.tsx
+
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { useState, useEffect, Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react"; // For dropdowns
 
 
-import { getServerSession } from "next-auth";
+const Navbar = () => {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
-const Navbar = async () => {
-  const session = await getServerSession()!;
- const user = session?.user?.email
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+  };
+
   return (
-    <nav className="sticky h-fit max-w-[100rem] mx-auto my-6 px-4 md:px-6 lg:px-8   w-full bg-white ">
-      <div className="flex  items-center justify-between ">
+    <nav className="sticky top-0 z-50 h-fit max-w-[100rem] mx-auto my-6 px-4 md:px-6 lg:px-8 w-full bg-white shadow-md rounded-lg">
+      <div className="flex items-center justify-between">
+        {/* Left Section */}
         <div className="flex items-center gap-6">
-        <Link href="/" className="flex z-40 font-semibold">
-          <img
-            src="/logo.png"
-            className="w-36  sm:w-40 2xl:w-44"
-            alt={""}
-          
-          />
-        </Link>
-          <Link href="/facilityhome">
-            <p className="font-bold hover:text-blue-700">FOR LABS & HEALTHCARE PROVIDERS</p>
+          <Link href="/" className="flex z-40 font-semibold">
+            <img
+              src="/logo.png"
+              className="w-36 sm:w-40 2xl:w-44"
+              alt="HealthPlatform Logo"
+            />
           </Link>
-          </div>
-        <div className="space-x-2 items-center sm:space-x-4 sm:flex">
+          <Link href="/facilityhome">
+            <span className="font-bold hover:text-blue-700 cursor-pointer">
+              FOR LABS & HEALTHCARE PROVIDERS
+            </span>
+          </Link>
+        </div>
+
+        {/* Right Section */}
+        <div className="flex items-center space-x-2 sm:space-x-4">
           <Link href="/pricing">
-            <button className="text-[#ffffff] active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-l px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
+            <button className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition">
               Pricing
             </button>
           </Link>
           <Link href="/faqs">
-            <button className="text-[#ffffff] active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-l px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
+            <button className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition">
               Faq&apos;s
             </button>
           </Link>
-          <Link href={user ? "/home" : "/login"}>
-            <button className="text-[#ffffff] active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-l px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
-            {user ? "Dashboard" : "LogIn"}
-            </button>
-          </Link>
-          
+          {session ? (
+            <>
+              <Link href={session.user.role === 'FACILITY' ? '/facility/dashboard' : "/dashboard"}>
+                <button className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition">
+                  Dashboard
+                </button>
+              </Link>
+
+              {/* Admin Link (Visible Only to Admins) */}
+              {session.user.role === "ADMIN" && (
+                <Link href="/admin">
+                  <button className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition">
+                    Admin
+                  </button>
+                </Link>
+              )}
+
+              {/* User Profile Dropdown */}
+              <Menu as="div" className="relative inline-block text-left">
+                <div>
+                  <Menu.Button className="flex items-center space-x-2 text-gray-800 hover:text-blue-700">
+                    {session.user.image ? (
+                      <img
+                        src={session.user.image}
+                        alt="User Avatar"
+                        className="w-8 h-8 rounded-full"
+                      />
+                    ) : (
+                      <span className="inline-block w-8 h-8 bg-gray-300 rounded-full"></span>
+                    )}
+                    <span>{session.user.name || session.user.email}</span>
+                    {/* <ChevronDownIcon className="w-5 h-5" aria-hidden="true" /> */}
+                  </Menu.Button>
+                </div>
+
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white border rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <Link
+                            href="/profile"
+                            className={`${
+                              active ? "bg-gray-100" : ""
+                            } block px-4 py-2 text-sm text-gray-700`}
+                          >
+                            Profile
+                          </Link>
+                        )}
+                      </Menu.Item>
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={handleLogout}
+                            className={`${
+                              active ? "bg-gray-100" : ""
+                            } block w-full text-left px-4 py-2 text-sm text-gray-700`}
+                          >
+                            Logout
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            </>
+          ) : (
+            <Link href="/login">
+              <button className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition">
+                LogIn
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </nav>

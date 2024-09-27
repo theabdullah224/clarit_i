@@ -14,19 +14,12 @@ import { createWorker } from 'tesseract.js';
 import * as PDFJS from 'pdfjs-dist';
 import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api';
 
-const testTypes = [
-  "Complete Blood Count",
-  "Lipid Panel",
-  "Liver Function Test",
-  "Kidney Function Test",
-  "Thyroid Function Test",
-  "Hemoglobin A1C",
-  "Vitamin D",
-  "Prostate-Specific Antigen",
-  "C-Reactive Protein"
-];
 
-const UploadResultsModal = () => {
+
+
+const UploadResultsModal = ()  => {
+
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -99,7 +92,7 @@ const UploadResultsModal = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      setIsOpen(false);
+      
       toast({
         title: "Success",
         description: "Lab results uploaded successfully",
@@ -111,10 +104,72 @@ const UploadResultsModal = () => {
         description: "Error uploading files",
         variant: "destructive",
       });
+    } 
+    try {
+      // Fetch lab results based on selected tests
+      const fetchResponse = await fetch("/api/fetch-lab-results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({  }),
+      });
+  
+      if (!fetchResponse.ok) {
+        throw new Error(`HTTP error! status: ${fetchResponse.status}`);
+      }
+  
+      const { labResults } = await fetchResponse.json();
+      setProgress(33);
+  
+      // Process with OpenAI
+      const openaiResponse = await fetch("/api/process-openai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ labResults }),
+      });
+  
+      if (!openaiResponse.ok) {
+        throw new Error(`HTTP error! status: ${openaiResponse.status}`);
+      }
+  
+      setProgress(66);
+  
+      // Generate PDF
+      const pdfResponse = await fetch("/api/generate-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resultId: labResults.id }),
+      });
+  
+      if (!pdfResponse.ok) {
+        throw new Error(`HTTP error! status: ${pdfResponse.status}`);
+      }
+      const { id } = await pdfResponse.json();
+      console.log(id)
+  setIsProcessing(false)
+      
+      setIsOpen(false);
+      setProgress(100);
+  
+      
+      
+      toast({
+        title: "Success",
+        description: "Lab results processed and PDF generated successfully",
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An unknown error occurred",
+        variant: "destructive",
+      });
     } finally {
       setIsProcessing(false);
     }
   };
+
+  
+
 
 
   

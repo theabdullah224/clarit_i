@@ -85,9 +85,7 @@ export default function Input({ routeName }: { routeName: string }) {
   
         if (res?.error) {
           setError("Invalid credentials");
-        } else {
-          router.push("/home");
-        }
+        } 
       } else {
         // Signup process
         const validate = signupSchema.safeParse(formData);

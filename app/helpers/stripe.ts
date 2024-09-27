@@ -14,11 +14,10 @@ export const PLANS = [
     {
         name: "Comprehensive Insights",
         slug: "comprehensive insights",
-        quota: 50,
-        files: 25,
+        
         price: {
             amount: 29.99,
-            priceId: 'price_1PvBeD1n49XVpvN1eDwtaZLk'
+            priceId: 'price_1PwMwy1n49XVpvN1ubzpLP21'
         }
 
     },
@@ -29,7 +28,7 @@ export const PLANS = [
         files: 25,
         price: {
             amount: 249,
-            priceId: 'price_1PvEbR1n49XVpvN1ZeKdXal2'
+            priceId: 'price_1PwMyI1n49XVpvN1sCmGaFnJ'
         }
 
     },
