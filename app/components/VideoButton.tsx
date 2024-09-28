@@ -38,7 +38,7 @@ const VideoButton = () => {
               </svg>
             </button>
             <video controls autoPlay className="w-full mt-6">
-              <source src="/calariti video.mp4" type="video/mp4" />
+              <source src="/frontvideo.mp4" type="video/mp4" />
             
             </video>
           </div>

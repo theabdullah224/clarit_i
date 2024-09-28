@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon ,Plus} from 'lucide-react';
 
 type FAQItem = {
   question: string;
@@ -72,7 +72,7 @@ const Page: React.FC<FAQProps> = ({ faqs = [] }) => {
 
       <h2 className="text-5xl font-bold mx-auto">FAQs</h2>
         </div>
-      <div className="w-full max-w-[100rem] mx-auto  py-8   my-6 px-4 md:px-6 lg:px-8    bg-white ">
+      <div className="w-full max-w-[50%] mx-auto  py-8   my-6 px-4 md:px-6 lg:px-8    bg-white ">
         
         <div className="space-y-4">
           {displayFaqs.map((faq, index) => (
@@ -82,7 +82,7 @@ const Page: React.FC<FAQProps> = ({ faqs = [] }) => {
                 onClick={() => toggleFAQ(index)}
               >
                 <span className="text-lg font-medium text-gray-800">{faq.question}</span>
-                <ChevronDownIcon 
+                <Plus 
                   className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${
                     openIndex === index ? 'transform rotate-180' : ''
                   }`}
