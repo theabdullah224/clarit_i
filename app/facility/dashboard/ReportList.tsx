@@ -22,7 +22,9 @@ interface ReportListProps {
 const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isDownloading, setIsDownloading] = useState<{ [key: string]: boolean }>({});
+  const [isDownloading, setIsDownloading] = useState<{
+    [key: string]: boolean;
+  }>({});
   const { toast } = useToast();
 
   useEffect(() => {
@@ -46,7 +48,8 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
         console.error("Error fetching reports:", error);
         toast({
           title: "Error",
-          description: error.message || "An error occurred while fetching reports.",
+          description:
+            error.message || "An error occurred while fetching reports.",
           variant: "destructive",
         });
       } finally {
@@ -94,7 +97,8 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
       console.error("Error downloading PDF:", error);
       toast({
         title: "Error",
-        description: error.message || "An error occurred while downloading the PDF",
+        description:
+          error.message || "An error occurred while downloading the PDF",
         variant: "destructive",
       });
     } finally {
@@ -121,21 +125,10 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
     return <p className="text-center text-gray-500">No reports available.</p>;
   }
 
-
-
-
-
-
-
-
-
-
   const handleSendEmail = async (reportId: string, reportTitle: string) => {
-   
-  
     try {
-     
-  
+      console.log("Report ID:", reportId); // Log reportId to check if it's valid
+
       // Generate the PDF
       const pdfResponse = await fetch("/api/facility/generate-pdf", {
         method: "POST",
@@ -146,9 +139,11 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
         const errorData = await pdfResponse.json();
         throw new Error(errorData.message || "Failed to generate PDF");
       }
-  
+
       const { pdf } = await pdfResponse.json();
-  
+
+      console.log({ reportId, pdf, reportTitle }); // Log to check the values before sending the email
+
       // Send the PDF via email
       const emailResponse = await fetch("/api/facility/send-patient-email", {
         method: "POST",
@@ -159,7 +154,7 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
         const errorData = await emailResponse.json();
         throw new Error(errorData.message || "Failed to send PDF to email");
       }
-  
+
       toast({
         title: "Success",
         description: "PDF sent to patient's email successfully",
@@ -168,54 +163,132 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
       console.error("Error sending PDF to email:", error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "An error occurred while sending the PDF to email",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An error occurred while sending the PDF to email",
         variant: "destructive",
+      });
+    } finally {
+      alert("Done");
+    }
+  };
+
+
+  const handleDeleteReport = async (reportId: string) => {
+    try {
+      const response = await fetch(`/api/facility/delete-report/${reportId}`, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete report');
+      }
+  
+      toast({
+        title: 'Success',
+        description: 'Report deleted successfully',
+      });
+  
+      // Optionally refresh the list of reports
+      // fetchReports(); // Call this function to refresh the list
+    } catch (error) {
+      console.error('Error deleting report:', error);
+      toast({
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'An error occurred while deleting the report',
+        variant: 'destructive',
       });
     }
   };
   
 
-
-
-
-
-
-
-
-
+  const handleViewPDF = async (reportId: string) => {
+    try {
+      const response = await fetch("/api/facility/generate-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reportId }),
+      });
   
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to generate PDF");
+      }
+  
+      const data = await response.json();
+      const { pdf } = data;
+  
+      // Convert base64 to Blob
+      const pdfBlob = base64ToBlob(pdf, "application/pdf");
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+      // Open PDF in a new tab
+      window.open(pdfUrl, '_blank');
+    } catch (error: any) {
+      console.error("Error viewing PDF:", error);
+      toast({
+        title: "Error",
+        description: error.message || "An error occurred while viewing the PDF",
+        variant: "destructive",
+      });
+    }
+  };
   return (
     <div className="mt-4">
       <h4 className="text-md font-semibold mb-2">Reports</h4>
       <ul className="space-y-2">
         {reports.map((report) => (
-          <li key={report.id} className="flex justify-between items-center bg-gray-50 p-2 rounded-md">
+          <li
+            key={report.id}
+            className="flex justify-between items-center bg-gray-50 p-2 rounded-md"
+          >
             <div>
               <p className="font-medium ">Report</p>
-              <p className="text-sm text-gray-600">{new Date(report.createdAt).toLocaleString()}</p>
+              <p className="text-sm text-gray-600">
+                {new Date(report.createdAt).toLocaleString()}
+              </p>
             </div>
 
             <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handleDownload(report.id, report.title)}
-              className="flex items-center space-x-1"
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleViewPDF(report.id)}
+                className="flex items-center space-x-1"
               >
-              <FileText className="w-4 h-4" />
-              <span>Download PDF</span>
-            </Button>
-            <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleSendEmail(report.id, report.title)}
-                    className="flex items-center space-x-2"
-                    >
-                    <File className="w-4 h-4" />
-                    <span>Send to email</span>
-                  
-                  </Button>
-                    </div>
+                <FileText className="w-4 h-4" />
+                <span>View PDF</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleDownload(report.id, report.title)}
+                className="flex items-center space-x-1"
+              >
+                <FileText className="w-4 h-4" />
+                <span>Download PDF</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleSendEmail(report.id, report.title)}
+                className="flex items-center space-x-2"
+              >
+                <File className="w-4 h-4" />
+                <span>Send to email</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleDeleteReport(report.id)}
+                className="flex items-center space-x-2"
+              >
+                <File className="w-4 h-4" />
+                <span>Delete PDF</span>
+              </Button>
+            </div>
           </li>
         ))}
       </ul>

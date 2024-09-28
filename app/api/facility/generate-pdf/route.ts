@@ -1,12 +1,12 @@
-// app/api/generate-pdf/route.ts
 
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import prisma from '@/prisma';
 import { z } from 'zod';
-
-import puppeteer from 'puppeteer';
 import { authOptions } from '../../auth/[...nextauth]/route';
+import puppeteer from 'puppeteer';
+import fs from 'fs';
+import path from 'path';
 
 const generatePdfSchema = z.object({
   reportId: z.string(),
@@ -43,6 +43,34 @@ export async function POST(request: Request) {
       );
     }
 
+    // Read and encode the logo as Base64
+    const logoPath = path.join(process.cwd(), 'public', 'logo.png');
+    const logoBuffer = fs.readFileSync(logoPath);
+    const logoBase64 = logoBuffer.toString('base64');
+
+    // Create the full HTML with the logo embedded
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Report</title>
+        <style>
+          body { font-family: Arial, sans-serif; margin: 20px; }
+          header { text-align: center; margin-bottom: 40px; }
+          header img { height: 80px; }
+        </style>
+      </head>
+      <body>
+        <header>
+          <img src="data:image/png;base64,${logoBase64}" alt="Logo" />
+        </header>
+        <main>
+          ${report.content}
+        </main>
+      </body>
+      </html>
+    `;
+
     // Launch Puppeteer
     const browser = await puppeteer.launch({
       headless: true,
@@ -50,13 +78,13 @@ export async function POST(request: Request) {
     });
     const page = await browser.newPage();
 
-    // Set the content of the page to the report's HTML content
-    await page.setContent(report.content, { waitUntil: 'networkidle0' });
+    // Set the content of the page to the HTML with the embedded logo
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
     // Generate PDF from the page content
     const pdfBuffer = await page.pdf({
       format: 'A4',
-      printBackground: true,
+      printBackground: false,
     });
 
     await browser.close();

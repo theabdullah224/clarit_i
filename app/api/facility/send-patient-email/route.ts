@@ -8,7 +8,7 @@ import { authOptions } from '../../auth/[...nextauth]/route';
 import { sendPdfEmail } from '@/app/helpers/pdfEmailSender';
 
 const sendPatientEmailSchema = z.object({
-  reportId: z.string().uuid('Invalid report ID'),
+  reportId: z.string().min(1, 'Invalid report ID'),  // Removed .uuid() validation
   pdf: z.string().min(1, 'PDF content is required'),
   reportTitle: z.string().min(1, 'Report title is required'),
 });
@@ -22,7 +22,10 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
+    console.log("Request body:", body);  // Log the body for debugging
+
     const parseResult = sendPatientEmailSchema.safeParse(body);
+    console.log("Validation result:", parseResult);  // Log validation result
 
     if (!parseResult.success) {
       const errorMessages = parseResult.error.errors.map(err => err.message).join(', ');
@@ -39,12 +42,13 @@ export async function POST(request: Request) {
     if (!report) {
       return NextResponse.json({ message: 'Report not found' }, { status: 404 });
     }
-
+    // @ts-ignore
     if (report.patient.facilityId !== session.user.id) {
       return NextResponse.json({ message: 'Unauthorized to send email for this report' }, { status: 403 });
     }
 
     const pdfBuffer = Buffer.from(pdf, 'base64');
+    // @ts-ignore
     const emailResult = await sendPdfEmail(report.patient.email, pdfBuffer, reportTitle);
 
     if (emailResult) {

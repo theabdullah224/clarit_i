@@ -155,6 +155,72 @@ const UserReports = () => {
     }
   };
 
+  const handleDelete = async (reportId: string) => {
+    if (confirm("Are you sure you want to delete this report?")) {
+      try {
+        const response = await fetch("/api/delete-report", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reportId }),
+        });
+  
+        // Check if the response is OK
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to delete report");
+        }
+  
+        // Update the reports state to remove the deleted report
+        setReports((prevReports) => prevReports.filter(report => report.id !== reportId));
+  
+        toast({
+          title: "Success",
+          description: "Report deleted successfully",
+        });
+      } catch (error: any) {
+        console.error("Error deleting report:", error);
+        toast({
+          title: "Error",
+          description: error.message || "An error occurred while deleting the report",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+  
+
+
+  const handleViewPDF = async (reportId: string) => {
+    try {
+      const response = await fetch("/api/generate-pdf", {  // Changed from "/api/facility/generate-pdf"
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reportId }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to generate PDF");
+      }
+  
+      const data = await response.json();
+      const { pdf } = data;
+  
+      // Convert base64 to Blob
+      const pdfBlob = base64ToBlob(pdf, "application/pdf");
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+      // Open PDF in a new tab
+      window.open(pdfUrl, '_blank');
+    } catch (error: any) {
+      console.error("Error viewing PDF:", error);
+      toast({
+        title: "Error",
+        description: error.message || "An error occurred while viewing the PDF",
+        variant: "destructive",
+      });
+    }
+  };
   return (
     <div className="mt-6 ">
       <h2 className="text-xl font-semibold  mb-4">Your Reports</h2>
@@ -178,6 +244,16 @@ const UserReports = () => {
                   </div>
                 </td>
                 <td className="py-2 flex justify-center px-4 gap-5 ">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewPDF(report.id)}
+                    className="flex items-center space-x-2"
+                  >
+                    <File className="w-4 h-4" />
+                    <span>View PDF</span>
+                  
+                  </Button>
                   <Button
                     variant="outline"
                     size="sm"
@@ -218,6 +294,16 @@ const UserReports = () => {
                   >
                     <File className="w-4 h-4" />
                     <span>Send to email</span>
+                  
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleDelete(report.id)}
+                    className="flex items-center space-x-2"
+                  >
+                    <File className="w-4 h-4" />
+                    <span>Delete report</span>
                   
                   </Button>
                 </td>
