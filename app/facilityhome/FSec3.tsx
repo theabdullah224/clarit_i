@@ -111,7 +111,7 @@ function Sec3() {
           
         >
           <Image
-            src="/2.jpg"
+            src="/4.png"
             alt="Clariti Healthcare Integration"
             width={600}
             height={400}

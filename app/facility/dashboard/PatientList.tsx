@@ -104,7 +104,7 @@ const PatientList: React.FC<PatientListProps> = ({
                 className="flex items-center space-x-1"
               >
                 <Trash2 className="w-4 h-4" />
-                <span>Delete</span>
+                <span>Delete user</span>
               </Button>
             </div>
           </div>

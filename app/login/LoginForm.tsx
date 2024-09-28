@@ -71,9 +71,12 @@ const LoginForm = () => {
   };
 
   return (
+    <div className="min-h-screen w-full flex  items-center justify-center">
+
+   
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-md p-8 bg-white rounded-lg shadow-md"
+      className="w-full minhs max-w-md p-8 bg-white rounded-lg shadow-md"
     >
       <h2 className="mb-6 text-2xl font-bold text-center">Login</h2>
       {message && (
@@ -137,6 +140,8 @@ const LoginForm = () => {
         </Link>
       </p>
     </form>
+    </div>
+
   );
 };
 

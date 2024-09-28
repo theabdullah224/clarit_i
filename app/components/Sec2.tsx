@@ -67,9 +67,9 @@ function Sec2() {
           initial="hidden"
           animate={controlsRight}
         >
-          <h2 className="text-5xl font-bold">How it works</h2>
+          <h2 className="text-5xl font-bold">How it Works</h2>
           <p className="text-muted-foreground text-lg">
-            Clariti's tools and insights enhance the services provided by your healthcare providers, helping you and your care team make more informed decisions.
+            Clariti s tools and insights enhance the services provided by your healthcare providers, helping you and your care team make more informed decisions.
           </p>
           <ul className="space-y-4 text-muted-foreground">
             {[
@@ -89,8 +89,8 @@ function Sec2() {
               <motion.li key={index} className="flex items-start justify-start" variants={itemVariants}>
                 <span className="text-black text-4xl leading-none mr-2 -mt-2">•</span>
                 <div className="justify-center">
-                  <span className="font-bold text-black">{item.title}</span>
-                  <p className="mt-1 text-base">{item.description}</p>
+                  <span className="font-bold text-black text-lg">{item.title}</span>
+                  <p className="mt-1 text-lg">{item.description}</p>
                 </div>
               </motion.li>
             ))}

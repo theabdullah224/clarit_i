@@ -17,7 +17,7 @@ export default function Home() {
         <Sec2 />
         <Sec3 />
         <Testimonials />
-        <AutoScroller />
+        {/* <AutoScroller /> */}
         <Sec4 />
       </main>
       <Footer />

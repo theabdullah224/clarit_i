@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/app/components/ui/tooltip";
-import { Check, HelpCircle, Minus } from "lucide-react";
+import { Check, CircleAlert, HelpCircle, Minus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PLANS } from "../helpers/stripe"; // Ensure this path is correct
@@ -31,8 +31,8 @@ const PricingClient = ({ user }: { user: User | null }) => {
 
   // Define allowed plans for each role using the exact slugs from your PLANS array
   const ALLOWED_PLANS: Record<string, string[]> = {
-    USER: ['comprehensive insights'],
-    FACILITY: ['health tracker'],
+    USER: ["comprehensive insights"],
+    FACILITY: ["health tracker"],
     // Add other roles and their allowed plans as needed
   };
 
@@ -79,12 +79,12 @@ const PricingClient = ({ user }: { user: User | null }) => {
       quota: "Customized Health Summary, Tailored to you",
       features: [
         {
-          text: "Upload",
+          text: "Upload your lab results",
           footnote:
             "Quickly upload your lab result in JPEG or PDF format to receive a customized health summary.",
         },
         {
-          text: "Access to your Full Health Report",
+          text: "Access to your Health Report",
           footnote:
             "Upgrade to view the comprehensive analysis of your lab results",
         },
@@ -110,7 +110,7 @@ const PricingClient = ({ user }: { user: User | null }) => {
       quota: "Take control of your health with detailed lab report insights",
       features: [
         {
-          text: "Upload",
+          text: "Upload your lab results",
           footnote: "One-time upload of your lab result via JPG images or PDFs",
         },
         {
@@ -143,7 +143,7 @@ const PricingClient = ({ user }: { user: User | null }) => {
       quota: "Enhance your practice with in-depth lab report analyses",
       features: [
         {
-          text: "Upload",
+          text: "Upload your patient lab results",
           footnote: "Process up to 50 of your patients' lab reports per month",
         },
         {
@@ -158,12 +158,12 @@ const PricingClient = ({ user }: { user: User | null }) => {
         },
         {
           text: "Enhanced Care",
-          footnote: "Provide your patients with the comprehensive care they deserve.",
+          footnote:
+            "Provide your patients with the comprehensive care they deserve.",
         },
         {
           text: "Leading-Edge Technology",
-          footnote:
-            "Stay ahead with detailed insights into each lab result",
+          footnote: "Stay ahead with detailed insights into each lab result",
         },
         {
           text: "Digital Sharing",
@@ -184,7 +184,7 @@ const PricingClient = ({ user }: { user: User | null }) => {
       quota: "Empower your patients with enhanced lab report analyses",
       features: [
         {
-          text: "Upload",
+          text: "Upload your patient lab results",
           footnote:
             "Process your patients’ lab reports per month – unlimited uploads included",
         },
@@ -204,8 +204,7 @@ const PricingClient = ({ user }: { user: User | null }) => {
         },
         {
           text: "Leading-Edge Technology",
-          footnote:
-            "Stand out with advanced health analysis services",
+          footnote: "Stand out with advanced health analysis services",
         },
         {
           text: "Digital Sharing",
@@ -214,14 +213,11 @@ const PricingClient = ({ user }: { user: User | null }) => {
         },
         {
           text: "Customer Support",
-          footnote:
-            "Priority 24/7 customer service and technical support.",
+          footnote: "Priority 24/7 customer service and technical support.",
         },
       ],
     },
   ];
-
- 
 
   return (
     <div className="pt-12 px-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10 2xl:grid-cols-4 max-w-[2500px]">
@@ -247,18 +243,20 @@ const PricingClient = ({ user }: { user: User | null }) => {
               className={cn(
                 "relative rounded-2xl bg-white shadow-lg flex flex-col justify-between",
                 {
-                  "border-2 border-blue-600 shadow-blue-200":
-                    plan === "Comprehensive Insights" || plan === "Health Tracker",
+                  "border border-gray-200 shadow-blue-200":
+                    plan === "Comprehensive Insights" ||
+                    plan === "Health Tracker",
                   "border border-gray-200":
-                    plan !== "Comprehensive Insights" && plan !== "Health Tracker",
+                    plan !== "Comprehensive Insights" &&
+                    plan !== "Health Tracker",
                 }
               )}
             >
-              {(plan === "Comprehensive Insights" || plan === "Health Tracker") && (
+              {/* {(plan === "Comprehensive Insights" || plan === "Health Tracker") && (
                 <div className="absolute flex items-center justify-center -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-3 py-2 text-sm font-medium text-white">
                   Upgrade now
                 </div>
-              )}
+              )} */}
               <div className="p-5">
                 <h3 className="my-3 text-center font-display text-2xl font-bold">
                   {plan}
@@ -266,17 +264,13 @@ const PricingClient = ({ user }: { user: User | null }) => {
                 <p className="text-gray-500 text-center text-sm">{tagline}</p>
                 <p className="my-5 font-display text-6xl font-semibold text-center">
                   {plan !== "Unlimited Wellness" && (
-                    <span className="text-4xl font-bold">
-                      ${price || 0}
-                    </span>
+                    <span className="text-4xl font-bold">${price || 0}</span>
                   )}
                 </p>
 
                 {/* Conditional text based on plan type */}
                 {plan === "Health Tracker" && (
-                  <p className="text-gray-500 text-center text-sm">
-                    Per month
-                  </p>
+                  <p className="text-gray-500 text-center text-sm">Per month</p>
                 )}
 
                 {plan === "Comprehensive Insights" && (
@@ -289,13 +283,16 @@ const PricingClient = ({ user }: { user: User | null }) => {
                   <p className="text-gray-500 items-center flex flex-col text-center text-sm">
                     Book a 1:1 LIVE Demo with our team via Calendly
                     <Link
-                    href={user?.role === "FACILITY" ? "https://calendly.com/firstresponders/clariti-live-demo" : ""}
-                    className="text-white mt-4  bg-black border text-center border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition"
-                  >
-                    Calendly
-                  </Link>
+                      href={
+                        user?.role === "FACILITY"
+                          ? "https://calendly.com/firstresponders/clariti-live-demo"
+                          : ""
+                      }
+                      className="text-white mt-4  bg-black border text-center border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition"
+                    >
+                      Calendly
+                    </Link>
                   </p>
-                  
                 )}
               </div>
 
@@ -304,7 +301,7 @@ const PricingClient = ({ user }: { user: User | null }) => {
                   <p className="text-sm">{quota?.toLocaleString()}</p>
                   <Tooltip delayDuration={300}>
                     <TooltipTrigger className="cursor-default ml-1.5">
-                      <HelpCircle className="h-4 w-4 text-zinc-500" />
+                      <CircleAlert className="h-4 w-4 text-zinc-500" />
                     </TooltipTrigger>
                     <TooltipContent className="w-80 p-2">
                       How many PDFs you can upload per month.
@@ -334,7 +331,7 @@ const PricingClient = ({ user }: { user: User | null }) => {
                         </p>
                         <Tooltip delayDuration={300}>
                           <TooltipTrigger className="cursor-default ml-1.5">
-                            <HelpCircle className="h-4 w-4 text-zinc-500" />
+                            <CircleAlert className="h-4 w-4 text-zinc-500" />
                           </TooltipTrigger>
                           <TooltipContent className="w-80 p-2">
                             {footnote}
@@ -355,51 +352,54 @@ const PricingClient = ({ user }: { user: User | null }) => {
               </ul>
               <div className="border-t border-gray-200" />
               <div className="p-5">
-              {plan === "Basic Snapshot" ? (
-  <Link
-    href={user?.role === "FACILITY" ? "/facility/dashboard" : "/dashboard"}
-    className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition"
-  >
-    {user ? "Go to Dashboard" : "Login"}
-  </Link>
-) : plan === "Unlimited Wellness" ? null : (
-  <button
-    onClick={() => {
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-      if (!priceId) {
-        console.error(`Price ID not found for plan: ${plan}`);
-        return;
-      }
-      if (!isPlanAllowed) {
-        alert(
-          "You are not authorized to subscribe to this plan. Sign up as a Facility user to subscribe to this plan"
-        );
-        return;
-      }
-      handleCheckout(plan, priceId);
-    }}
-    disabled={isLoading}
-    className={cn(
-      "text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg transition disabled:bg-gray-400",
-      {
-        "hover:bg-white hover:text-black": isPlanAllowed,
-        "cursor-not-allowed": !isPlanAllowed,
-      }
-    )}
-  >
-    {isLoading
-      ? "Processing..."
-      : user
-      ? isPlanAllowed
-        ? "Upgrade now"
-        : "Not Available"
-      : "Sign up"}
-  </button>
-)}
-
+                {plan === "Basic Snapshot" ? (
+                  <Link
+                    href={
+                      user?.role === "FACILITY"
+                        ? "/facility/dashboard"
+                        : "/dashboard"
+                    }
+                    className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition"
+                  >
+                    {user ? "Go to Dashboard" : "Login"}
+                  </Link>
+                ) : plan === "Unlimited Wellness" ? null : (
+                  <button
+                    onClick={() => {
+                      if (!user) {
+                        router.push("/login");
+                        return;
+                      }
+                      if (!priceId) {
+                        console.error(`Price ID not found for plan: ${plan}`);
+                        return;
+                      }
+                      if (!isPlanAllowed) {
+                        alert(
+                          "You are not authorized to subscribe to this plan. Sign up as a Facility user to subscribe to this plan"
+                        );
+                        return;
+                      }
+                      handleCheckout(plan, priceId);
+                    }}
+                    disabled={isLoading}
+                    className={cn(
+                      "text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg transition disabled:bg-gray-400",
+                      {
+                        "hover:bg-white hover:text-black": isPlanAllowed,
+                        "cursor-not-allowed": !isPlanAllowed,
+                      }
+                    )}
+                  >
+                    {isLoading
+                      ? "Processing..."
+                      : user
+                      ? isPlanAllowed
+                        ? "Upgrade now"
+                        : "Not Available"
+                      : "Sign up"}
+                  </button>
+                )}
               </div>
             </div>
           );

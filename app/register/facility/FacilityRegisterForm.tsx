@@ -90,9 +90,10 @@ const FacilityRegisterForm = () => {
   };
 
   return (
+    <div className="w-full py-10 min-h-screen flex items-center justify-center ">
     <form
       onSubmit={handleSubmit}
-      className="w-full p-8 bg-white rounded-lg shadow-md"
+      className="w-full p-8 bg-white rounded-lg shadow-md max-w-md"
     >
       <h2 className="mb-6 text-2xl font-bold text-center">Register as Facility</h2>
       {message && (
@@ -289,6 +290,7 @@ const FacilityRegisterForm = () => {
         </Link>
       </p>
     </form>
+    </div>
   );
 };
 

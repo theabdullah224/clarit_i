@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useState, useEffect, Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react"; // For dropdowns
-
+import avatar from '@/public/users-avatar.png'
+import Image from "next/image";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -20,7 +21,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 h-fit max-w-[100rem] mx-auto my-6 px-4 md:px-6 lg:px-8 w-full bg-white shadow-md rounded-lg">
+    <nav className="sticky top-0 z-50 h-fit max-w-[100rem] mx-auto my-6 px-4 py-2 md:px-6 lg:px-8 w-full bg-white  rounded-lg">
       <div className="flex items-center justify-between">
         {/* Left Section */}
         <div className="flex items-center gap-6">
@@ -31,23 +32,24 @@ const Navbar = () => {
               alt="HealthPlatform Logo"
             />
           </Link>
-          <Link href="/facilityhome">
-            <span className="font-bold hover:text-blue-700 cursor-pointer">
-              FOR LABS & HEALTHCARE PROVIDERS
-            </span>
-          </Link>
+         
         </div>
 
         {/* Right Section */}
         <div className="flex items-center space-x-2 sm:space-x-4">
+        <Link href="/facilityhome">
+            <span className="font-bold pr-10 text-[#067c73] hover:text-blue-700 cursor-pointer">
+              FOR LABS & HEALTHCARE PROVIDERS
+            </span>
+          </Link>
           <Link href="/pricing">
-            <button className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition">
+            <button className="text-white  bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition">
               Pricing
             </button>
           </Link>
           <Link href="/faqs">
             <button className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition">
-              Faq&apos;s
+              FAQ&apos;s
             </button>
           </Link>
           {session ? (
@@ -69,18 +71,16 @@ const Navbar = () => {
 
               {/* User Profile Dropdown */}
               <Menu as="div" className="relative inline-block text-left">
-                <div>
-                  <Menu.Button className="flex items-center space-x-2 text-gray-800 hover:text-blue-700">
-                    {session.user.image ? (
-                      <img
-                        src={session.user.image}
+                <div className=" rounded-full  flex items-center justify-center">
+                  <Menu.Button className="w-8 h-8 rounded-full ">
+                   
+                      <Image
+                        src={avatar}
                         alt="User Avatar"
                         className="w-8 h-8 rounded-full"
                       />
-                    ) : (
-                      <span className="inline-block w-8 h-8 bg-gray-300 rounded-full"></span>
-                    )}
-                    <span>{session.user.name || session.user.email}</span>
+                   
+                    
                     {/* <ChevronDownIcon className="w-5 h-5" aria-hidden="true" /> */}
                   </Menu.Button>
                 </div>

@@ -62,6 +62,7 @@ const RegisterForm = () => {
   };
 
   return (
+    <div className="min-h-screen flex items-center justify-center">
     <form
       onSubmit={handleSubmit}
       className="w-full max-w-md p-8 bg-white rounded-lg shadow-md"
@@ -170,6 +171,8 @@ const RegisterForm = () => {
         </Link>
       </p>
     </form>
+    </div>
+
   );
 };
 

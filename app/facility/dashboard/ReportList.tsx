@@ -4,7 +4,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/app/components/ui/button";
-import { FileText } from "lucide-react";
+import { File, FileText } from "lucide-react";
 import { useToast } from "@/app/components/ui/use-toast";
 import { Progress } from "@/app/components/ui/progress";
 
@@ -120,6 +120,70 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
   if (reports.length === 0) {
     return <p className="text-center text-gray-500">No reports available.</p>;
   }
+
+
+
+
+
+
+
+
+
+
+  const handleSendEmail = async (reportId: string, reportTitle: string) => {
+   
+  
+    try {
+     
+  
+      // Generate the PDF
+      const pdfResponse = await fetch("/api/facility/generate-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reportId }),
+      });
+      if (!pdfResponse.ok) {
+        const errorData = await pdfResponse.json();
+        throw new Error(errorData.message || "Failed to generate PDF");
+      }
+  
+      const { pdf } = await pdfResponse.json();
+  
+      // Send the PDF via email
+      const emailResponse = await fetch("/api/facility/send-patient-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reportId, pdf, reportTitle }),
+      });
+      if (!emailResponse.ok) {
+        const errorData = await emailResponse.json();
+        throw new Error(errorData.message || "Failed to send PDF to email");
+      }
+  
+      toast({
+        title: "Success",
+        description: "PDF sent to patient's email successfully",
+      });
+    } catch (error) {
+      console.error("Error sending PDF to email:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occurred while sending the PDF to email",
+        variant: "destructive",
+      });
+    }
+  };
+  
+
+
+
+
+
+
+
+
+
+  
   return (
     <div className="mt-4">
       <h4 className="text-md font-semibold mb-2">Reports</h4>
@@ -127,18 +191,31 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
         {reports.map((report) => (
           <li key={report.id} className="flex justify-between items-center bg-gray-50 p-2 rounded-md">
             <div>
-              <p className="font-medium">{report.title}</p>
+              <p className="font-medium ">Report</p>
               <p className="text-sm text-gray-600">{new Date(report.createdAt).toLocaleString()}</p>
             </div>
+
+            <div className="flex gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={() => handleDownload(report.id, report.title)}
               className="flex items-center space-x-1"
-            >
+              >
               <FileText className="w-4 h-4" />
               <span>Download PDF</span>
             </Button>
+            <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleSendEmail(report.id, report.title)}
+                    className="flex items-center space-x-2"
+                    >
+                    <File className="w-4 h-4" />
+                    <span>Send to email</span>
+                  
+                  </Button>
+                    </div>
           </li>
         ))}
       </ul>

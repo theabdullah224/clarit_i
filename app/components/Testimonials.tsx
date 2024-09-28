@@ -126,10 +126,12 @@
 // };
 
 // export default TestimonialCarousel;
-
+"use client"
 import Image from 'next/image';
 import React from 'react';
 import arrow from '../../public/arrow.png'
+import { motion } from 'framer-motion';
+
 interface TestType {
   name: string;
   description: string;
@@ -194,9 +196,12 @@ const LabTestTypes: React.FC = () => {
         Discover the range of lab tests we support and analyze, empowering you to make informed health decisions.
       </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
         {testTypes.map((test, index) => (
-          <div key={index} className="border rounded-lg p-6 flex items-start space-x-4">
+          <motion.div
+          whileHover={{ scale: 1.1 }} // Scale up on hover
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          key={index} className="border rounded-lg p-6 flex items-start space-x-4">
             <div className='flex items-center justify-center gap-4'>
 
             <img src={test.imageUrl} alt={test.name} className="w-16 h-16 object-contain" />
@@ -206,9 +211,9 @@ const LabTestTypes: React.FC = () => {
             </div>
             </div>
          
-              <Image src={arrow} alt="" />
+              {/* <Image src={arrow} alt="" /> */}
            
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

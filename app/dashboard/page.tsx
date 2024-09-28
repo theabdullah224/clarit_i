@@ -1,5 +1,5 @@
 // app/dashboard/page.tsx
-
+// simple user dashbaord
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import prisma from '@/prisma';

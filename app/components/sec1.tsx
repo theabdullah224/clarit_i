@@ -63,12 +63,21 @@ function Sec1() {
           </p>
           <div className="flex gap-4  justify-between items-start pt-4">
             {/* Button to open the modal instead of directly linking */}
+            <div className='flex gap-4'>
+
             <button 
               onClick={openModal}
               className="text-[#ffffff] active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition"
-            >
+              >
               Upload Lab Results
             </button>
+            <button 
+              onClick={openModal}
+              className="text-[#ffffff] active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition"
+              >
+              Sign Up
+            </button>
+              </div>
             <div>
               <VideoButton/>
             </div>

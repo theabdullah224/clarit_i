@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import React from 'react'
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import prisma from '@/prisma';
+import Footer from '../components/Footer';
 const page = async () => {
 
     const session = await getServerSession(authOptions);
@@ -15,14 +16,15 @@ const page = async () => {
         },
       });
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <>
+    <div className="min-h-screen max-w-[100rem] w-full mx-auto">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold mb-6">Profile</h1>
         
       </div>
 
       {/* Profile Section */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+      <div className="bg-white  rounded-lg  mb-6">
         <h2 className="text-2xl font-semibold mb-4">Profile Information</h2>
         <p>
           <strong>Name:</strong> {user?.name || "N/A"}
@@ -39,6 +41,8 @@ const page = async () => {
         </p>
       </div>
       </div>
+      <Footer/>
+    </>
   )
 }
 

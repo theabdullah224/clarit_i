@@ -5,6 +5,7 @@ import FSec2 from "./FSec2";
 import FSec3 from "./FSec3";
 import FSec4 from "./FSec4";
 import Footer from "../components/Footer";
+import Testimonials from '../components/Testimonials'
 
 const FacilityHomePage = () => {
   return (
@@ -13,6 +14,7 @@ const FacilityHomePage = () => {
         <FSec1 />
         <FSec2 />
         <FSec3 />
+        <Testimonials/>
         <FSec4 />
       </main>
       <Footer />

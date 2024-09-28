@@ -1,5 +1,5 @@
 "use client";
-
+// simple user
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/app/components/ui/dialog";
 import { Button } from "@/app/components/ui/button";
@@ -165,7 +165,7 @@ const UploadResultsModal = () => {
 
       const openaiData = await openaiResponse.json();
       const report = openaiData.report;
-      console.log(report)
+      // console.log(report)
 
       setProgress(80);
 
@@ -174,40 +174,7 @@ const UploadResultsModal = () => {
         description: "Report generated successfully. Generating PDF...",
       });
 
-      // Generate PDF
-      // const pdfResponse = await fetch("/api/generate-pdf", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ reportId: report.id }),
-      // });
-
-      // if (!pdfResponse.ok) {
-      //   const errorData = await pdfResponse.json();
-      //   throw new Error(errorData.message || 'Failed to generate PDF');
-      // }
-
-      // const pdfData = await pdfResponse.json();
-      // const { pdf } = pdfData;
-
-      // // Convert base64 to Blob
-      // const pdfBlob = base64ToBlob(pdf, "application/pdf");
-      // const pdfUrl = URL.createObjectURL(pdfBlob);
-
-      // // Create a link and trigger download
-      // const link = document.createElement("a");
-      // link.href = pdfUrl;
-      // link.download = `${report.title}.pdf`;
-      // document.body.appendChild(link);
-      // link.click();
-      // document.body.removeChild(link);
-
-      // setProgress(100);
-      // setIsOpen(false);
-
-      // toast({
-      //   title: "Success",
-      //   description: "Report processed and PDF generated successfully",
-      // });
+     
     } catch (error: any) {
       console.error("Error:", error);
       toast({
@@ -216,6 +183,7 @@ const UploadResultsModal = () => {
         variant: "destructive",
       });
     } finally {
+      setIsOpen(false)
       setIsProcessing(false);
       setProgress(100);
     }
@@ -264,16 +232,23 @@ const UploadResultsModal = () => {
                     <p className='text-xs text-zinc-500'>PDF or Image</p>
                   </div>
 
-                  {acceptedFiles && acceptedFiles[0] && (
-                    <div className='max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200'>
-                      <div className='px-3 py-2 h-full grid place-items-center'>
-                        <File className='h-4 w-4 text-blue-500' />
-                      </div>
-                      <div className='px-3 py-2 h-full text-sm truncate'>
-                        {acceptedFiles[0].name}
-                      </div>
-                    </div>
-                  )}
+                  {acceptedFiles && acceptedFiles.length > 0 && (
+  <div className="flex flex-col gap-2 max-h-[10rem] overflow-auto">
+    {acceptedFiles.map((file, index) => (
+      <div key={index} className="flex gap-2 items-center">
+        <div className='max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200'>
+          <div className='px-3 py-2 h-full grid place-items-center'>
+            <File className='h-4 w-4 text-blue-500' />
+          </div>
+          <div className='px-3 py-2 h-full text-sm truncate'>
+            {file.name}
+          </div>
+        </div>
+        
+      </div>
+    ))}
+  </div>
+)}
 
                   {isProcessing && (
                     <div className='w-full mt-4 max-w-xs mx-auto'>

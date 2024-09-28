@@ -2,12 +2,14 @@
 
 "use client";
 
+import Footer from "../components/Footer";
 import RegisterForm from "./RegisterForm";
 
 const RegisterPage = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+    <div className="">
       <RegisterForm />
+      <Footer/>
     </div>
   );
 };

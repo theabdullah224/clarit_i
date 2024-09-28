@@ -113,27 +113,71 @@ const UserReports = () => {
   if (reports.length === 0) {
     return <p className="text-center text-gray-500">No reports available.</p>;
   }
+  const handleSendEmail = async (reportId: string, reportTitle: string) => {
+    try {
+      // First, generate the PDF
+      const pdfResponse = await fetch("/api/generate-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reportId }),
+      });
+  
+      if (!pdfResponse.ok) {
+        const errorData = await pdfResponse.json();
+        throw new Error(errorData.message || "Failed to generate PDF");
+      }
+  
+      const { pdf } = await pdfResponse.json();
+  
+      // Now send the PDF via email
+      const emailResponse = await fetch("/api/send-pdf-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reportId, pdf, reportTitle }),
+      });
+  
+      if (!emailResponse.ok) {
+        const errorData = await emailResponse.json();
+        throw new Error(errorData.message || "Failed to send PDF to email");
+      }
+  
+      toast({
+        title: "Success",
+        description: "PDF sent to your email successfully",
+      });
+    } catch (error: any) {
+      console.error("Error sending PDF to email:", error);
+      toast({
+        title: "Error",
+        description: error.message || "An error occurred while sending the PDF to email",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 ">
       <h2 className="text-xl font-semibold  mb-4">Your Reports</h2>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
             <tr>
               <th className="py-2 px-4  border-b">Title</th>
-              <th className="py-2 px-4 border-b">Created At</th>
+              <th className="py-2  border-b">Created At</th>
               <th className="py-2 px-4 border-b">Actions</th>
             </tr>
           </thead>
           <tbody>
             {reports.map((report) => (
-              <tr key={report.id} className="hover:bg-gray-100  ">
-                <td className="py-2 px-4 border-b flex justify-center">Report</td>
-                <td className="py-2 px-4 border-b justify-center">
+              <tr key={report.id} className="hover:bg-gray-100 border-b ">
+                <td className="py-2 px-4  flex justify-center">Report</td>
+                <td className="py-2 px-4  justify-center  ">
+                  <div className=" flex items-center justify-center">
                   {new Date(report.createdAt).toLocaleString()}
+
+                  </div>
                 </td>
-                <td className="py-2 flex justify-center px-4 gap-5 border-b">
+                <td className="py-2 flex justify-center px-4 gap-5 ">
                   <Button
                     variant="outline"
                     size="sm"
@@ -169,34 +213,12 @@ const UserReports = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    // onClick={}
-                    // disabled={isDownloading[report.id]}
+                    onClick={() => handleSendEmail(report.id, report.title)}
                     className="flex items-center space-x-2"
                   >
                     <File className="w-4 h-4" />
                     <span>Send to email</span>
-                    {/* {isDownloading[report.id] && (
-                      <svg
-                        className="animate-spin h-4 w-4 text-blue-500 ml-2"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8v8H4z"
-                        ></path>
-                      </svg>
-                    )} */}
+                  
                   </Button>
                 </td>
               </tr>

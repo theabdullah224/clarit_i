@@ -11,7 +11,7 @@ const UserDashboardClient = ({ session, user }: { session: any; user: any }) => 
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen max-w-[100rem] w-full mx-auto p-8">
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold mb-6">User Dashboard</h1>
         <UploadResultsModal />

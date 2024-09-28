@@ -166,40 +166,7 @@ const UploadLabResultModal: React.FC<UploadLabResultModalProps> = ({
 
       setProgress(75);
 
-      // Generate PDF
-      // const pdfResponse = await fetch("/api/generate-pdf", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ reportId: report.id }),
-      // });
-
-      // if (!pdfResponse.ok) {
-      //   const errorData = await pdfResponse.json();
-      //   throw new Error(errorData.message || 'Failed to generate PDF');
-      // }
-
-      // const pdfData = await pdfResponse.json();
-      // const { pdf } = pdfData;
-
-      // // Convert base64 to Blob
-      // const pdfBlob = base64ToBlob(pdf, "application/pdf");
-      // const pdfUrl = URL.createObjectURL(pdfBlob);
-
-      // // Create a link and trigger download
-      // const link = document.createElement("a");
-      // link.href = pdfUrl;
-      // link.download = `${report.title}.pdf`;
-      // document.body.appendChild(link);
-      // link.click();
-      // document.body.removeChild(link);
-
-      // setProgress(100);
-      // setIsOpen(false);
-
-      // toast({
-      //   title: "Success",
-      //   description: "Report processed and PDF generated successfully.",
-      // });
+      
     } catch (error: any) {
       console.error("Error:", error);
       toast({
@@ -208,20 +175,13 @@ const UploadLabResultModal: React.FC<UploadLabResultModalProps> = ({
         variant: "destructive",
       });
     } finally {
+      setIsOpen(false)
       setIsProcessing(false);
       setProgress(100);
     }
   };
 
-  // Helper function to convert base64 to Blob
-  // const base64ToBlob = (base64: string, type: string) => {
-  //   const binary = atob(base64);
-  //   const array = [];
-  //   for (let i = 0; i < binary.length; i++) {
-  //     array.push(binary.charCodeAt(i));
-  //   }
-  //   return new Blob([new Uint8Array(array)], { type });
-  // };
+  
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -246,7 +206,7 @@ const UploadLabResultModal: React.FC<UploadLabResultModalProps> = ({
           }}
         >
           {({ getRootProps, getInputProps, acceptedFiles }) => (
-            <div {...getRootProps()} className='border h-40 m-4 border-dashed border-gray-300 rounded-md'>
+            <div {...getRootProps()} className='border  h-64 m-4 border-dashed border-gray-300 rounded-md '>
               <div className='flex items-center justify-center h-full w-full'>
                 <label htmlFor='dropzone-file' className='flex flex-col items-center justify-center w-full h-full rounded-md cursor-pointer bg-gray-50 hover:bg-gray-100'>
                   <div className='flex flex-col items-center justify-center pt-5 pb-6'>
@@ -258,15 +218,23 @@ const UploadLabResultModal: React.FC<UploadLabResultModalProps> = ({
                   </div>
 
                   {acceptedFiles && acceptedFiles.length > 0 && (
-                    <div className='max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200'>
-                      <div className='px-3 py-2 h-full grid place-items-center'>
-                        <File className='h-4 w-4 text-blue-500' />
-                      </div>
-                      <div className='px-3 py-2 h-full text-sm truncate'>
-                        {acceptedFiles.map((file) => file.name).join(", ")}
-                      </div>
-                    </div>
-                  )}
+  <div className="flex flex-col gap-2 max-h-[10rem] h-full overflow-auto">
+    {acceptedFiles.map((file, index) => (
+      <div key={index} className="flex gap-2 items-center ">
+        <div className='max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200'>
+          <div className='px-3 py-2 h-full grid place-items-center'>
+            <File className='h-4 w-4 text-blue-500' />
+          </div>
+          <div className='px-3 py-2 h-full text-sm truncate'>
+            {file.name}
+          </div>
+        </div>
+      </div>
+    ))}
+ 
+  </div>
+)}
+
 
                   {isProcessing && (
                     <div className='w-full mt-4 max-w-xs mx-auto'>

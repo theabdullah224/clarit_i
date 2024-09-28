@@ -6,7 +6,8 @@ import tiktok from '../../public/icons8-tiktok.svg'
 import youtube from '../../public/icons8-youtube.svg'
 import Image from "next/image";
 import Link from 'next/link'
-import { Instagram, Facebook, Twitter,Youtube,Activity } from "lucide-react";
+import { IconBrandFacebook ,IconBrandX,IconBrandTiktok,IconBrandYoutube,IconBrandInstagram} from '@tabler/icons-react';
+// import { Instagram, Facebook, Twitter,Youtube,Activity } from "lucide-react";
 
 function Footer() {
   return (
@@ -18,20 +19,20 @@ function Footer() {
           </div>
           <div className="flex gap-4">
             <a href="https://www.tiktok.com/@moreclariti?_t=8p4ZYVe6eOb&_r=1" className="text-sm hover:underline" >
-            <Activity className="h-6 w-6 text-[#737373]" />
+            <IconBrandTiktok className="h-6 w-6 text-[#737373]" />
             </a>
             <a href="https://www.facebook.com/moreclariti" className="text-sm hover:underline" >
               {/* <Image src={fb} alt="" className='w-6 ' /> */}
-              <Facebook className="h-6 w-6 text-[#737373]" />
+              <IconBrandFacebook className="h-6 w-6 text-[#737373]" />
             </a>
             <a href="https://www.x.com/moreclariti/" className="text-sm hover:underline" >
-            <Twitter className="h-6 w-6 text-[#737373]" />
+            <IconBrandX className="h-6 w-6 text-[#737373]" />
             </a>
             <a href="https://www.youtube.com/@moreclariti" className="text-sm hover:underline" >
-            <Youtube className="h-6 w-6 text-[#737373]" />
+            <IconBrandYoutube className="h-6 w-6 text-[#737373]" />
             </a>
             <a href="https://www.instagram.com/moreclariti/" className="text-sm hover:underline" >
-            <Instagram className="h-6 w-6 text-[#737373]" />
+            <IconBrandInstagram className="h-6 w-6 text-[#737373]" />
             </a>
             </div>
           <nav className="flex items-center gap-4 mt-4 md:mt-0">
