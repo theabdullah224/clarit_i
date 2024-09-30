@@ -7,6 +7,15 @@
     text-wrap: balance;
   }
 }
+/* nprogress custom styles */
+#nprogress .bar {
+  background: #ff0000; /* Change to your preferred color */
+  height: 3px; /* Adjust the height */
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #ff0000, 0 0 5px #ff0000; /* Adjust the glow */
+}
 
 /* Firefox */
 * {

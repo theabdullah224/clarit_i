@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       orderBy: { uploadedAt: 'desc' },
       take: 1, // Fetch only the latest 5 results
     });
-    console.log(labResults)
+    // console.log("--------------->>>>>>>>",labResults)
 
     return NextResponse.json({ labResults }, { status: 200 });
   } catch (error) {

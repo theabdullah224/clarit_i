@@ -10,7 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/app/components/ui/tooltip";
-import { Check, CircleAlert, HelpCircle, Minus } from "lucide-react";
+import { Check, CircleAlert, HelpCircle, Minus,X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PLANS } from "../helpers/stripe"; // Ensure this path is correct
@@ -76,7 +76,7 @@ const PricingClient = ({ user }: { user: User | null }) => {
     {
       plan: "Basic Snapshot",
       tagline: "Customized Health Summary - Free of cost",
-      quota: "Customized Health Summary, Tailored to you",
+      quota: "Concise summary of your health insights",
       features: [
         {
           text: "Upload your lab results",
@@ -84,23 +84,26 @@ const PricingClient = ({ user }: { user: User | null }) => {
             "Quickly upload your lab result in JPEG or PDF format to receive a customized health summary.",
         },
         {
-          text: "Access to your Health Report",
+          text: "Summary to your Health Report",
           footnote:
             "Upgrade to view the comprehensive analysis of your lab results",
         },
         {
           text: "Optimal Ranges",
           footnote: "Upgrade to see the optimal ranges for your lab biomarkers",
+          negative: true,
         },
         {
           text: "Actionable Interpretations",
           footnote:
             "Upgrade to receive actionable interpretations of your results",
+            negative: true,
         },
         {
           text: "Recommendations",
           footnote:
             "Upgrade to receive Basic diet, supplement, and lifestyle recommendations",
+            negative: true,
         },
       ],
     },
@@ -264,18 +267,18 @@ const PricingClient = ({ user }: { user: User | null }) => {
                 <p className="text-gray-500 text-center text-sm">{tagline}</p>
                 <p className="my-5 font-display text-6xl font-semibold text-center">
                   {plan !== "Unlimited Wellness" && (
-                    <span className="text-4xl font-bold">${price || 0}</span>
+                    <span className="text-4xl font-bold">${price || 0}{plan === "Health Tracker" && "/month"}</span>
                   )}
                 </p>
 
                 {/* Conditional text based on plan type */}
                 {plan === "Health Tracker" && (
-                  <p className="text-gray-500 text-center text-sm">Per month</p>
+                  <p className="text-gray-500 text-center text-sm">Upload 50 Lab reports</p>
                 )}
 
                 {plan === "Comprehensive Insights" && (
                   <p className="text-gray-500 text-center text-sm">
-                    (one-time payment only)
+                    one-time payment only
                   </p>
                 )}
 
@@ -290,7 +293,7 @@ const PricingClient = ({ user }: { user: User | null }) => {
                       }
                       className="text-white mt-4  bg-black border text-center border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition"
                     >
-                      Calendly
+                      Schedule Call
                     </Link>
                   </p>
                 )}
@@ -315,7 +318,8 @@ const PricingClient = ({ user }: { user: User | null }) => {
                   <li key={text} className="flex space-x-5">
                     <div className="flex-shrink-0">
                       {negative ? (
-                        <Minus className="h-6 w-6 text-gray-300" />
+                        
+                        <X className="h-6 w-6 text-red-600" />
                       ) : (
                         <Check className="h-6 w-6 text-blue-500" />
                       )}

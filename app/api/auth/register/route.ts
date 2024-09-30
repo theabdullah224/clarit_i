@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       subject: "Verify your email",
       html: `
         <p>Hello ${name || "User"},</p>
-        <p>Thank you for registering at HealthPlatform. Please verify your email by using this code:</p>
+        <p>Thank you for registering Clariti Health Insights. Please verify your email by using this code:</p>
         <p>Your verification code is:</p>
         <h2>${verificationCode}</h2>
         <p>This code will expire in 24 hours.</p>

@@ -9,9 +9,9 @@ import { z } from "zod";
 import { authOptions } from "../../auth/[...nextauth]/route";
 
 const uploadLabResultSchema = z.object({
-    patientId: z.string().nonempty('Patient ID is required'),
-   
-  });
+  patientId: z.string().nonempty('Patient ID is required'),
+
+});
 // Define request body schema using Zod
 const processOpenAISchema = z.object({
   labResults: z
@@ -63,9 +63,9 @@ export async function POST(request: Request) {
         {
           role: "system",
           content: `Generate a comprehensive health analysis  and generate that in the following structured format.
+            <h1>Health Analysis Summary</h1>
             <h2> Report Overview </h2>
-    <p> Date of Report: [Extract from report] </p>
-    <p> Report Reference: [Extract from report] </p>
+             <p> Date of Report:${Date.now()} </p>
 
      Summary of Key Health Metrics
    Create a table with the following columns:
@@ -158,7 +158,7 @@ Ensure the output is formatted using HTML elements like <h1>, <h2>, <table>, <th
         },
         { role: "user", content: prompt },
       ],
-     
+
     });
 
     const reportContent = completion.choices[0].message?.content;
@@ -168,12 +168,12 @@ Ensure the output is formatted using HTML elements like <h1>, <h2>, <table>, <th
     }
 
     const patient = await prisma.patient.findUnique({
-        where: { id: patientId },
-      });
+      where: { id: patientId },
+    });
 
-      if (!patient || patient.facilityId !== session.user.id) {
-        return NextResponse.json({ message: 'Patient not found or unauthorized' }, { status: 404 });
-      }
+    if (!patient || patient.facilityId !== session.user.id) {
+      return NextResponse.json({ message: 'Patient not found or unauthorized' }, { status: 404 });
+    }
 
     // Create Report in DB
     const report = await prisma.report.create({
@@ -181,8 +181,8 @@ Ensure the output is formatted using HTML elements like <h1>, <h2>, <table>, <th
         title: `Report for User ${patientId}`,
         content: reportContent,
         patient: {
-            connect: { id: patientId },
-          },
+          connect: { id: patientId },
+        },
         user: {
           connect: { id: session.user.id },
         },
