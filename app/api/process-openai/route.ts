@@ -374,7 +374,7 @@ Implications of Procrastination  For each health issue that is identified, you s
 - Add padding and margins to create a minimalist layout with plenty of whitespace.
        
        Generate a comprehensive health analysis  and generate that in the following structured format.
-       <p><b>Comprehensive health analysis report for  ${name}  </b></p>
+       <p><b>Comprehensive health analysis report for  ${name || "user"}  </b></p>
         <div>
         <b>  Patient Information:</b>
         <ul>

@@ -108,11 +108,12 @@ export async function POST(req: NextRequest) {
       to: email,
       subject: "Verify your email",
       html: `
-        <p>Hello ${name || "Facility User"},</p>
-        <p>Thank you for registering Clariti Health Insights. Please verify your email by using this code:</p>
-        <p>Your verification code is:</p>
+        <p>hi ${name || "Facility User"},</p>
+        <p>Thank you for registering with Clariti Health Insights. Please use the following verification code to complete the sign up process:</p>
         <h2>${verificationCode}</h2>
-        <p>This code will expire in 24 hours.</p>
+       <p>This one-time code will expire in one hour. Do not share this code with others.</p>
+        <p>Yours Truly</p>
+        <p>The Clariti Health Insights Team</p>
       `,
     };
 

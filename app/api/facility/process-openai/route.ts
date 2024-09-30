@@ -47,12 +47,204 @@ export async function POST(request: Request) {
   // @ts-ignore
   const { patientId } = parseResultID.data;
 
+
+
+
+
+
+
+
+
+// ---------------------------
+function parseLabReport(text) {
+  // Helper function to extract data based on multiple possible patterns
+  const extractField = (regexes) => {
+    for (const regex of regexes) {
+      const match = text.match(regex);
+      if (match) return match[1].trim();
+    }
+    return null;
+  };
+  const dateRegex = /\b(\d{1,2}[-\/\s]*[A-Za-z]{3,9}[-\/\s]*\d{2,4}(?:\s*\d{1,2}:\d{2}(?:[AP]M)?)?)\b/i;
+
+  // Regular expressions for each field with different possible variations
+  const nameRegexes = [
+    /Name:\s*(.*)/i,
+    /Patient Name:\s*(.*)/i,
+    /Full Name:\s*(.*)/i,
+    /Name of Patient:\s*(.*)/i,
+    /Client Name:\s*(.*)/i,
+    /Receiver Name:\s*(.*)/i,
+    /Recipient:\s*(.*)/i,
+    /Name\s*:\s*(.*)/i,
+    /Name\s*-\s*(.*)/i,
+    /Name\s*\.\s*(.*)/i,
+    /Customer:\s*(.*)/i,
+    /Insured Name:\s*(.*)/i,
+    /Test Subject:\s*(.*)/i,
+    /User Name:\s*(.*)/i,
+    /Patient:\s*(.*)/i,
+    /Name:\s*(.*)/i,
+    /Patient Name:\s*(.*)/i,
+    /Name\s*-\s*(.*)/i,
+    /Recipient:\s*(.*)/i,
+    /Patient:\s*(.*)/i,
+  ];
+
+  const ageRegexes = [
+    /Age:\s*(.*)/i,
+    /Patient Age:\s*(.*)/i,
+    /Years old:\s*(.*)/i,
+    /Age\s*:\s*(.*)/i,
+    /DOB\/Age:\s*(.*)/i,
+    /Age\s*-\s*(.*)/i,
+    /Date of Birth\/Age:\s*(.*)/i,
+    /Birth Year:\s*(.*)/i,
+    /Birth Date:\s*(.*)/i,
+    /Age at Test:\s*(.*)/i,
+    /Years:\s*(.*)/i,
+    /Client Age:\s*(.*)/i,
+    /Recipient Age:\s*(.*)/i,
+    /User Age:\s*(.*)/i,
+    /DOB:\s*(.*)/i,
+    /Age\/Gender:\s*(\d+)\s*\/?\s*(\w+)/i, // Handles age + gender in one line
+    /Age:\s*(\d+)/i,
+    /Age\s*:\s*(.*)/i,
+    /Years old:\s*(\d+)/i,
+  ];
+
+  const genderRegexes = [
+    /Gender:\s*(.*)/i,
+    /Sex:\s*(.*)/i,
+    /Patient Gender:\s*(.*)/i,
+    /Biological Sex:\s*(.*)/i,
+    /Sex\s*:\s*(.*)/i,
+    /Client Gender:\s*(.*)/i,
+    /Recipient Sex:\s*(.*)/i,
+    /Gender Identity:\s*(.*)/i,
+    /Sexual Identity:\s*(.*)/i,
+    /User Gender:\s*(.*)/i,
+    /Biological Gender:\s*(.*)/i,
+    /Sex:\s*(.*)/i,
+    /Patient Sex:\s*(.*)/i,
+    /Male\/Female:\s*(.*)/i,
+    /Gender\s*:\s*(.*)/i,
+    /Gender:\s*(.*)/i,
+    /Sex:\s*(.*)/i,
+    /Age\/Gender:\s*\d+\s*\/?\s*(\w+)/i, 
+  ];
+
+  const sampleIdRegexes = [
+    /Sample ID:\s*(.*)/i,
+    /Specimen ID:\s*(.*)/i,
+    /ID Number:\s*(.*)/i,
+    /Accession Number:\s*(.*)/i,
+    /Barcode Number:\s*(.*)/i,
+    /Sample Code:\s*(.*)/i,
+    /Collection ID:\s*(.*)/i,
+    /Sample Identifier:\s*(.*)/i,
+    /Reference Number:\s*(.*)/i,
+    /Patient ID:\s*(.*)/i,
+    /Case ID:\s*(.*)/i,
+    /Lab ID:\s*(.*)/i,
+    /Test Number:\s*(.*)/i,
+    /Order Number:\s*(.*)/i,
+    /Report ID:\s*(.*)/i,
+    /Sample ID:\s*(.*)/i,
+    /ID Number:\s*(.*)/i,
+    /Specimen ID:\s*(.*)/i,
+  ];
+
+  const dateCollectedRegexes = [
+    /Date Collected:\s*(.*)/i,
+    /Collection Date:\s*(.*)/i,
+    /Sample Collection Date:\s*(.*)/i,
+    /Date of Collection:\s*(.*)/i,
+    /Collection Time:\s*(.*)/i,
+    /Date and Time Collected:\s*(.*)/i,
+    /Specimen Collection Date:\s*(.*)/i,
+    /Date Sample Taken:\s*(.*)/i,
+    /Date Drawn:\s*(.*)/i,
+    /Date Sample Collected:\s*(.*)/i,
+    /Date & Time of Collection:\s*(.*)/i,
+    /Draw Date:\s*(.*)/i,
+    /Collected On:\s*(.*)/i,
+    /Collection Date and Time:\s*(.*)/i,
+    /Sample Drawn:\s*(.*)/i,
+    /Date Collected:\s*(.*)/i,
+    /Collection Date:\s*(.*)/i,
+    dateRegex, 
+  ];
+
+  const doctorRegexes = [
+    /Doctor:\s*(.*)/i,
+    /Referring Physician:\s*(.*)/i,
+    /Consultant:\s*(.*)/i,
+    /Attending Doctor:\s*(.*)/i,
+    /Physician:\s*(.*)/i,
+    /Doctor in Charge:\s*(.*)/i,
+    /Doctor Name:\s*(.*)/i,
+    /Referring Doctor:\s*(.*)/i,
+    /Medical Consultant:\s*(.*)/i,
+    /Consulting Doctor:\s*(.*)/i,
+    /Attending Physician:\s*(.*)/i,
+    /Reviewed by:\s*(.*)/i,
+    /Authorized by:\s*(.*)/i,
+    /Test Ordered by:\s*(.*)/i,
+    /Referred by:\s*(.*)/i,
+  ];
+
+  const dateOfReportRegexes = [
+    /Date of Report:\s*(.*)/i,
+    /Report Date:\s*(.*)/i,
+    /Test Report Date:\s*(.*)/i,
+    /Result Date:\s*(.*)/i,
+    /Date of Result:\s*(.*)/i,
+    /Completion Date:\s*(.*)/i,
+    /Report Issued:\s*(.*)/i,
+    /Date Issued:\s*(.*)/i,
+    /Date Reported:\s*(.*)/i,
+    /Test Completed On:\s*(.*)/i,
+    /Date of Result Issued:\s*(.*)/i,
+    /Date Finalized:\s*(.*)/i,
+    /Report Generated On:\s*(.*)/i,
+    /Results Available:\s*(.*)/i,
+    /Issued On:\s*(.*)/i,
+    /Visit Date:\s*(.*)/i,
+    /Date of Visit:\s*(.*)/i,
+    dateRegex, 
+  ];
+
+  // Extract the required fields using multiple patterns
+  return {
+    name: extractField(nameRegexes),
+    age: extractField(ageRegexes),
+    gender: extractField(genderRegexes),
+    sampleId: extractField(sampleIdRegexes),
+    dateCollected: extractField(dateCollectedRegexes),
+    doctor: extractField(doctorRegexes),
+    dateOfReport: extractField(dateOfReportRegexes),
+  };
+}
+
+
+
+
+// ---------------------------
+
+
+
+
+
+
+
+
   try {
     // Concatenate all extracted texts
     const allText = labResults
       .map((result) => result.extractedText)
       .join("\n\n");
-
+    const { name, age, gender, sampleId, dateCollected, doctor, dateOfReport } = parseLabReport(allText);
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
     const prompt = `Lab Results: ${allText}`;
@@ -63,9 +255,21 @@ export async function POST(request: Request) {
         {
           role: "system",
           content: `Generate a comprehensive health analysis  and generate that in the following structured format.
+            <p><b>Comprehensive health analysis report for  ${name || "user"}  </b></p>
+        <div>
+        <b>  Patient Information:</b>
+        <ul>
+            <li>&nbsp;&nbsp;&nbsp;<b>Name:&nbsp;</b>${name} </li>
+            <li>&nbsp;&nbsp;&nbsp;<b>Age:&nbsp;</b>${age} </li>
+            <li>&nbsp;&nbsp;&nbsp;<b>Gender:&nbsp;</b>${gender} </li>
+            <li>&nbsp;&nbsp;&nbsp;<b>Sample ID:&nbsp;</b> ${sampleId}</li>
+            <li>&nbsp;&nbsp;&nbsp;<b>Date Collected:&nbsp;</b>${dateCollected} </li>
+            <li>&nbsp;&nbsp;&nbsp;<b>Doctor:&nbsp;</b>${doctor} </li>
+            <li>&nbsp;&nbsp;&nbsp;<b>Date of Report:&nbsp;</b> ${new Date().getDate().toString().padStart(2, '0')}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getFullYear()} (${new Date().getHours() % 12 || 12}:${new Date().getMinutes().toString().padStart(2, '0')} ${new Date().getHours() >= 12 ? 'PM' : 'AM'})</li>
+        </ul>
+    </div>
             <h1>Health Analysis Summary</h1>
             <h2> Report Overview </h2>
-             <p> Date of Report:${Date.now()} </p>
 
      Summary of Key Health Metrics
    Create a table with the following columns:
@@ -152,7 +356,8 @@ Ensure the output is formatted using HTML elements like <h1>, <h2>, <table>, <th
 - Add padding and margins to create a minimalist layout with plenty of whitespace.
 
 
-
+Never include this type of message :"This HTML code generates a structured health analysis report for a null patient, addressing all elements
+specified in the request while ensuring clarity and modern design."
 
 `,
         },
