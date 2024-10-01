@@ -58,7 +58,6 @@ const UserReports = () => {
     fetchReports();
   }, [toast]);
 
-  
   const handleDownload = async (reportId: string, reportTitle: string) => {
     setIsDownloading((prev) => ({ ...prev, [reportId]: true }));
     try {
