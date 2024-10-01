@@ -75,7 +75,7 @@ export async function POST(req: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${req.headers.get('origin')}/dashboard`,
       cancel_url: `${req.headers.get('origin')}/pricing`,
     });
     const updatedUser = await prisma.user.update({
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
           },
         ],
         mode: 'subscription',
-        success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${req.headers.get('origin')}/facility/dashboard`,
         cancel_url: `${req.headers.get('origin')}/pricing`,
       });
       const updatedUser = await prisma.user.update({

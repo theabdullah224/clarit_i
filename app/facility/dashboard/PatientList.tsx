@@ -87,7 +87,7 @@ const PatientList: React.FC<PatientListProps> = ({
         <div key={patient.id} className="border rounded-md p-4">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-semibold">{patient.name}</h3>
+              <h3 className="text-lg font-semibold capitalize">{patient.name}</h3>
               <p className="text-sm text-gray-600">{patient.email}</p>
               {patient.phone && <p className="text-sm text-gray-600">Phone: {patient.phone}</p>}
             </div>

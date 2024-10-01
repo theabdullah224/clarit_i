@@ -7,6 +7,7 @@ import Link from 'next/link';
 
 function Sec4() {
   const controls = useAnimation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: false,
@@ -96,6 +97,14 @@ function Sec4() {
     },
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Handler to close the modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div ref={ref} className="relative overflow-hidden">
       <motion.section 
@@ -105,7 +114,7 @@ function Sec4() {
         animate={controls}
       >
         <motion.h2 className="text-3xl font-bold" variants={titleVariants}>
-          {Array.from("Join the revolution in health analysis.").map((letter, index) => (
+          {Array.from("Get Started with Clariti").map((letter, index) => (
             <motion.span key={index} variants={letterVariants}>
               {letter}
             </motion.span>
@@ -115,19 +124,56 @@ function Sec4() {
           className="text-muted-foreground text-lg"
           variants={subtitleVariants}
         >
-         Sign up for Clariti today.
+          Sign up today and start unlocking your personal health insights.
         </motion.p>
         <motion.div
           variants={buttonVariants}
           whileHover="hover"
         >
-          <Link href="/signup" className='mt-4'>
-            <button className="text-[#ffffff] active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
+          
+            <button onClick={openModal} className="text-[#ffffff] active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
               Sign up
             </button>
-          </Link>
+         
         </motion.div>
       </motion.section>
+        {/* Modal Implementation */}
+        {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <motion.div
+           initial={{ scale: 0.8, opacity: 0 }}
+           animate={{ scale: 1, opacity: 1 }}
+           exit={{ scale: 0.8, opacity: 0 }}
+           transition={{
+             type: "spring",
+             stiffness: 860, // Control the bounciness
+             damping: 20,    // Control the speed of the oscillation
+             duration: 0.3,  // Optional: You can adjust this or remove if not needed with spring
+           }}
+            className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full"
+          >
+            <h3 className="text-2xl w-fit m-auto  font-semibold mb-4">Choose an Option</h3>
+            <div className="flex flex-col max-w-[15rem] mx-auto   gap-4">
+              <Link href="/register">
+                <button className="text-[#ffffff] w-full active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
+                  User
+                </button>
+              </Link>
+              <Link href="/register/facility">
+                <button className="text-[#ffffff] w-full active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
+                  Facility
+                </button>
+              </Link>
+              <button 
+                onClick={closeModal}
+                className="mt-4 text-gray-500 hover:text-gray-700 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
       {/* <div className="absolute inset-0 z-0">
         {particles.map((particle, index) => (
           <motion.div

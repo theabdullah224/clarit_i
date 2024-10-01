@@ -26,9 +26,9 @@ const LoginForm = () => {
       if (session.user.role === "ADMIN") {
         router.push("/admin");
       } else if (session.user.role === "FACILITY"){
-        router.push("/facility/dashboard");
+        router.push("/pricing");
       } else {
-        router.push("/dashboard");
+        router.push("/pricing");
       }
     }
   }, [session, status, router]);

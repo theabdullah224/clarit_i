@@ -101,21 +101,26 @@ function Sec1() {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ duration: 0.3 }}
+           initial={{ scale: 0.8, opacity: 0 }}
+           animate={{ scale: 1, opacity: 1 }}
+           exit={{ scale: 0.8, opacity: 0 }}
+           transition={{
+             type: "spring",
+             stiffness: 860, // Control the bounciness
+             damping: 20,    // Control the speed of the oscillation
+             duration: 0.3,  // Optional: You can adjust this or remove if not needed with spring
+           }}
             className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full"
           >
-            <h3 className="text-2xl  font-semibold mb-4">Choose an Option</h3>
-            <div className="flex flex-col items-center  gap-4">
+            <h3 className="text-2xl w-fit m-auto  font-semibold mb-4">Choose an Option</h3>
+            <div className="flex flex-col max-w-[15rem] mx-auto   gap-4">
               <Link href="/register">
-                <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">
+                <button className="text-[#ffffff] w-full active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
                   User
                 </button>
               </Link>
               <Link href="/register/facility">
-                <button className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition">
+                <button className="text-[#ffffff] w-full active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition">
                   Facility
                 </button>
               </Link>

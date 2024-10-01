@@ -22,9 +22,13 @@ interface ReportListProps {
 const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isDownloading, setIsDownloading] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const [isDownloading, setIsDownloading] = useState<{[key: string]: boolean;}>({});
+  const [isSendingEmail, setIsSendingEmail] = useState<{[key: string]: boolean;}>({});
+  const [isDeletingReport, setIsDeletingReport] = useState<{[key: string]: boolean;}>({});
+  const [isViewingPDF, setIsViewingPDF] = useState<{ [key: string]: boolean }>({});
+  const [emailButtonLabel, setEmailButtonLabel] = useState<{ [key: string]: string }>({});
+
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -127,8 +131,8 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
 
   const handleSendEmail = async (reportId: string, reportTitle: string) => {
     try {
-      console.log("Report ID:", reportId); // Log reportId to check if it's valid
-
+      setIsSendingEmail((prev) => ({ ...prev, [reportId]: true }));
+      setEmailButtonLabel((prev) => ({ ...prev, [reportId]: "Sending to mail" }));
       // Generate the PDF
       const pdfResponse = await fetch("/api/facility/generate-pdf", {
         method: "POST",
@@ -170,62 +174,71 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
         variant: "destructive",
       });
     } finally {
-      alert("Done");
+      setEmailButtonLabel((prev) => ({ ...prev, [reportId]: "Done!" }));
+      setTimeout(() => {
+        setEmailButtonLabel((prev) => ({ ...prev, [reportId]: "Send to email" }));
+      }, 2000);
+      setIsSendingEmail((prev) => ({ ...prev, [reportId]: false })); // Set loading state to false
     }
   };
-
 
   const handleDeleteReport = async (reportId: string) => {
     try {
+      setIsDeletingReport((prev) => ({ ...prev, [reportId]: true }));
       const response = await fetch(`/api/facility/delete-report/${reportId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to delete report');
+        throw new Error(errorData.message || "Failed to delete report");
       }
-  
+
       toast({
-        title: 'Success',
-        description: 'Report deleted successfully',
+        title: "Success",
+        description: "Report deleted successfully",
       });
-  
+
       // Optionally refresh the list of reports
       // fetchReports(); // Call this function to refresh the list
     } catch (error) {
-      console.error('Error deleting report:', error);
+      console.error("Error deleting report:", error);
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'An error occurred while deleting the report',
-        variant: 'destructive',
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An error occurred while deleting the report",
+        variant: "destructive",
       });
+    } finally {
+      setIsDeletingReport((prev) => ({ ...prev, [reportId]: false })); // Set loading state to false
     }
   };
-  
 
   const handleViewPDF = async (reportId: string) => {
     try {
+      setIsViewingPDF((prev) => ({ ...prev, [reportId]: true }));
       const response = await fetch("/api/facility/generate-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reportId }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to generate PDF");
       }
-  
+
       const data = await response.json();
       const { pdf } = data;
-  
+
       // Convert base64 to Blob
       const pdfBlob = base64ToBlob(pdf, "application/pdf");
       const pdfUrl = URL.createObjectURL(pdfBlob);
-  
+
       // Open PDF in a new tab
-      window.open(pdfUrl, '_blank');
+      window.open(pdfUrl, "_blank");
     } catch (error: any) {
       console.error("Error viewing PDF:", error);
       toast({
@@ -233,6 +246,8 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
         description: error.message || "An error occurred while viewing the PDF",
         variant: "destructive",
       });
+    } finally {
+      setIsViewingPDF((prev) => ({ ...prev, [reportId]: false })); // Set loading state to false
     }
   };
   return (
@@ -256,37 +271,132 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
                 variant="outline"
                 size="sm"
                 onClick={() => handleViewPDF(report.id)}
-                className="flex items-center space-x-1"
+                disabled={isViewingPDF[report.id]} // Disable the button while viewing
+                className="flex items-center space-x-2"
               >
                 <FileText className="w-4 h-4" />
                 <span>View PDF</span>
+                {isViewingPDF[report.id] && (
+                  <svg
+                    className="animate-spin h-4 w-4 text-blue-500 ml-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                )}
               </Button>
+
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleDownload(report.id, report.title)}
-                className="flex items-center space-x-1"
+                disabled={isDownloading[report.id]}
+                className="flex items-center space-x-2"
               >
-                <FileText className="w-4 h-4" />
+                <File className="w-4 h-4" />
                 <span>Download PDF</span>
+                {isDownloading[report.id] && (
+                  <svg
+                    className="animate-spin h-4 w-4 text-blue-500 ml-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                )}
               </Button>
+
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleSendEmail(report.id, report.title)}
+                disabled={isSendingEmail[report.id]} // Disable the button while sending email
                 className="flex items-center space-x-2"
               >
                 <File className="w-4 h-4" />
-                <span>Send to email</span>
+                <span>{emailButtonLabel[report.id] || "Send to mail"}</span> 
+                {isSendingEmail[report.id] && (
+                  <svg
+                    className="animate-spin h-4 w-4 text-blue-500 ml-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                )}
               </Button>
+
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => handleDeleteReport(report.id)}
+                disabled={isDeletingReport[report.id]} // Disable the button while deleting
                 className="flex items-center space-x-2"
               >
                 <File className="w-4 h-4" />
                 <span>Delete PDF</span>
+                {isDeletingReport[report.id] && (
+                  <svg
+                    className="animate-spin h-4 w-4 text-blue-500 ml-2"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v8H4z"
+                    ></path>
+                  </svg>
+                )}
               </Button>
             </div>
           </li>

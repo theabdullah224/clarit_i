@@ -279,13 +279,13 @@ const FacilityRegisterForm = () => {
 
       <button
         type="submit"
-        className="w-full px-4 py-2 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition"
+        className="text-[#ffffff] w-full active:bg-[#ffffff] bg-[#000000] border border-[#000000]  text-xl px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-[#ffffff] hover:text-black transition"
       >
         Register as Facility
       </button>
       <p className="mt-4 text-center text-gray-600">
         Already have an account?{" "}
-        <Link href="/login" className="text-green-600 hover:underline">
+        <Link href="/login" className="text-blue-600 hover:underline">
           Login
         </Link>
       </p>
