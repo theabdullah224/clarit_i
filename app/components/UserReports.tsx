@@ -25,18 +25,7 @@ const UserReports = () => {
 
 
   const { toast } = useToast();
-  useEffect(() => {
-   
-    const reportdata = localStorage.getItem("reportsdata");
 
-    if (reportdata) {
-      setReports(JSON.parse(reportdata)); 
-    } else {
-      setReports([]); 
-    }
-    
-  }, [])
-  
   useEffect(() => {
     const fetchReports = async () => {
       setIsLoading(true);

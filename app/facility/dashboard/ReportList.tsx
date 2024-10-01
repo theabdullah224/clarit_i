@@ -193,6 +193,11 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to delete report");
       }
+      setReports((prevReports) => {
+        const updatedReports = prevReports.filter((report) => report.id !== reportId);
+        
+        return updatedReports;
+      });
 
       toast({
         title: "Success",
