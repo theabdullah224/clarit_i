@@ -48,186 +48,186 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
-  
+
   const { labResults } = parseResult.data;
 
 
-// ---------------------------
-function parseLabReport(text) {
-  // Helper function to extract data based on multiple possible patterns
-  const extractField = (regexes) => {
-    for (const regex of regexes) {
-      const match = text.match(regex);
-      if (match) return match[1].trim();
-    }
-    return null;
-  };
-  const dateRegex = /\b(\d{1,2}[-\/\s]*[A-Za-z]{3,9}[-\/\s]*\d{2,4}(?:\s*\d{1,2}:\d{2}(?:[AP]M)?)?)\b/i;
+  // ---------------------------
+  function parseLabReport(text) {
+    // Helper function to extract data based on multiple possible patterns
+    const extractField = (regexes) => {
+      for (const regex of regexes) {
+        const match = text.match(regex);
+        if (match) return match[1].trim();
+      }
+      return null;
+    };
+    const dateRegex = /\b(\d{1,2}[-\/\s]*[A-Za-z]{3,9}[-\/\s]*\d{2,4}(?:\s*\d{1,2}:\d{2}(?:[AP]M)?)?)\b/i;
 
-  // Regular expressions for each field with different possible variations
-  const nameRegexes = [
-    /Name:\s*(.*)/i,
-    /Patient Name:\s*(.*)/i,
-    /Full Name:\s*(.*)/i,
-    /Name of Patient:\s*(.*)/i,
-    /Client Name:\s*(.*)/i,
-    /Receiver Name:\s*(.*)/i,
-    /Recipient:\s*(.*)/i,
-    /Name\s*:\s*(.*)/i,
-    /Name\s*-\s*(.*)/i,
-    /Name\s*\.\s*(.*)/i,
-    /Customer:\s*(.*)/i,
-    /Insured Name:\s*(.*)/i,
-    /Test Subject:\s*(.*)/i,
-    /User Name:\s*(.*)/i,
-    /Patient:\s*(.*)/i,
-    /Name:\s*(.*)/i,
-    /Patient Name:\s*(.*)/i,
-    /Name\s*-\s*(.*)/i,
-    /Recipient:\s*(.*)/i,
-    /Patient:\s*(.*)/i,
-  ];
+    // Regular expressions for each field with different possible variations
+    const nameRegexes = [
+      /Name:\s*(.*)/i,
+      /Patient Name:\s*(.*)/i,
+      /Full Name:\s*(.*)/i,
+      /Name of Patient:\s*(.*)/i,
+      /Client Name:\s*(.*)/i,
+      /Receiver Name:\s*(.*)/i,
+      /Recipient:\s*(.*)/i,
+      /Name\s*:\s*(.*)/i,
+      /Name\s*-\s*(.*)/i,
+      /Name\s*\.\s*(.*)/i,
+      /Customer:\s*(.*)/i,
+      /Insured Name:\s*(.*)/i,
+      /Test Subject:\s*(.*)/i,
+      /User Name:\s*(.*)/i,
+      /Patient:\s*(.*)/i,
+      /Name:\s*(.*)/i,
+      /Patient Name:\s*(.*)/i,
+      /Name\s*-\s*(.*)/i,
+      /Recipient:\s*(.*)/i,
+      /Patient:\s*(.*)/i,
+    ];
 
-  const ageRegexes = [
-    /Age:\s*(.*)/i,
-    /Patient Age:\s*(.*)/i,
-    /Years old:\s*(.*)/i,
-    /Age\s*:\s*(.*)/i,
-    /DOB\/Age:\s*(.*)/i,
-    /Age\s*-\s*(.*)/i,
-    /Date of Birth\/Age:\s*(.*)/i,
-    /Birth Year:\s*(.*)/i,
-    /Birth Date:\s*(.*)/i,
-    /Age at Test:\s*(.*)/i,
-    /Years:\s*(.*)/i,
-    /Client Age:\s*(.*)/i,
-    /Recipient Age:\s*(.*)/i,
-    /User Age:\s*(.*)/i,
-    /DOB:\s*(.*)/i,
-    /Age\/Gender:\s*(\d+)\s*\/?\s*(\w+)/i, // Handles age + gender in one line
-    /Age:\s*(\d+)/i,
-    /Age\s*:\s*(.*)/i,
-    /Years old:\s*(\d+)/i,
-  ];
+    const ageRegexes = [
+      /Age:\s*(.*)/i,
+      /Patient Age:\s*(.*)/i,
+      /Years old:\s*(.*)/i,
+      /Age\s*:\s*(.*)/i,
+      /DOB\/Age:\s*(.*)/i,
+      /Age\s*-\s*(.*)/i,
+      /Date of Birth\/Age:\s*(.*)/i,
+      /Birth Year:\s*(.*)/i,
+      /Birth Date:\s*(.*)/i,
+      /Age at Test:\s*(.*)/i,
+      /Years:\s*(.*)/i,
+      /Client Age:\s*(.*)/i,
+      /Recipient Age:\s*(.*)/i,
+      /User Age:\s*(.*)/i,
+      /DOB:\s*(.*)/i,
+      /Age\/Gender:\s*(\d+)\s*\/?\s*(\w+)/i, // Handles age + gender in one line
+      /Age:\s*(\d+)/i,
+      /Age\s*:\s*(.*)/i,
+      /Years old:\s*(\d+)/i,
+    ];
 
-  const genderRegexes = [
-    /Gender:\s*(.*)/i,
-    /Sex:\s*(.*)/i,
-    /Patient Gender:\s*(.*)/i,
-    /Biological Sex:\s*(.*)/i,
-    /Sex\s*:\s*(.*)/i,
-    /Client Gender:\s*(.*)/i,
-    /Recipient Sex:\s*(.*)/i,
-    /Gender Identity:\s*(.*)/i,
-    /Sexual Identity:\s*(.*)/i,
-    /User Gender:\s*(.*)/i,
-    /Biological Gender:\s*(.*)/i,
-    /Sex:\s*(.*)/i,
-    /Patient Sex:\s*(.*)/i,
-    /Male\/Female:\s*(.*)/i,
-    /Gender\s*:\s*(.*)/i,
-    /Gender:\s*(.*)/i,
-    /Sex:\s*(.*)/i,
-    /Age\/Gender:\s*\d+\s*\/?\s*(\w+)/i, 
-  ];
+    const genderRegexes = [
+      /Gender:\s*(.*)/i,
+      /Sex:\s*(.*)/i,
+      /Patient Gender:\s*(.*)/i,
+      /Biological Sex:\s*(.*)/i,
+      /Sex\s*:\s*(.*)/i,
+      /Client Gender:\s*(.*)/i,
+      /Recipient Sex:\s*(.*)/i,
+      /Gender Identity:\s*(.*)/i,
+      /Sexual Identity:\s*(.*)/i,
+      /User Gender:\s*(.*)/i,
+      /Biological Gender:\s*(.*)/i,
+      /Sex:\s*(.*)/i,
+      /Patient Sex:\s*(.*)/i,
+      /Male\/Female:\s*(.*)/i,
+      /Gender\s*:\s*(.*)/i,
+      /Gender:\s*(.*)/i,
+      /Sex:\s*(.*)/i,
+      /Age\/Gender:\s*\d+\s*\/?\s*(\w+)/i,
+    ];
 
-  const sampleIdRegexes = [
-    /Sample ID:\s*(.*)/i,
-    /Specimen ID:\s*(.*)/i,
-    /ID Number:\s*(.*)/i,
-    /Accession Number:\s*(.*)/i,
-    /Barcode Number:\s*(.*)/i,
-    /Sample Code:\s*(.*)/i,
-    /Collection ID:\s*(.*)/i,
-    /Sample Identifier:\s*(.*)/i,
-    /Reference Number:\s*(.*)/i,
-    /Patient ID:\s*(.*)/i,
-    /Case ID:\s*(.*)/i,
-    /Lab ID:\s*(.*)/i,
-    /Test Number:\s*(.*)/i,
-    /Order Number:\s*(.*)/i,
-    /Report ID:\s*(.*)/i,
-    /Sample ID:\s*(.*)/i,
-    /ID Number:\s*(.*)/i,
-    /Specimen ID:\s*(.*)/i,
-  ];
+    const sampleIdRegexes = [
+      /Sample ID:\s*(.*)/i,
+      /Specimen ID:\s*(.*)/i,
+      /ID Number:\s*(.*)/i,
+      /Accession Number:\s*(.*)/i,
+      /Barcode Number:\s*(.*)/i,
+      /Sample Code:\s*(.*)/i,
+      /Collection ID:\s*(.*)/i,
+      /Sample Identifier:\s*(.*)/i,
+      /Reference Number:\s*(.*)/i,
+      /Patient ID:\s*(.*)/i,
+      /Case ID:\s*(.*)/i,
+      /Lab ID:\s*(.*)/i,
+      /Test Number:\s*(.*)/i,
+      /Order Number:\s*(.*)/i,
+      /Report ID:\s*(.*)/i,
+      /Sample ID:\s*(.*)/i,
+      /ID Number:\s*(.*)/i,
+      /Specimen ID:\s*(.*)/i,
+    ];
 
-  const dateCollectedRegexes = [
-    /Date Collected:\s*(.*)/i,
-    /Collection Date:\s*(.*)/i,
-    /Sample Collection Date:\s*(.*)/i,
-    /Date of Collection:\s*(.*)/i,
-    /Collection Time:\s*(.*)/i,
-    /Date and Time Collected:\s*(.*)/i,
-    /Specimen Collection Date:\s*(.*)/i,
-    /Date Sample Taken:\s*(.*)/i,
-    /Date Drawn:\s*(.*)/i,
-    /Date Sample Collected:\s*(.*)/i,
-    /Date & Time of Collection:\s*(.*)/i,
-    /Draw Date:\s*(.*)/i,
-    /Collected On:\s*(.*)/i,
-    /Collection Date and Time:\s*(.*)/i,
-    /Sample Drawn:\s*(.*)/i,
-    /Date Collected:\s*(.*)/i,
-    /Collection Date:\s*(.*)/i,
-    dateRegex, 
-  ];
+    const dateCollectedRegexes = [
+      /Date Collected:\s*(.*)/i,
+      /Collection Date:\s*(.*)/i,
+      /Sample Collection Date:\s*(.*)/i,
+      /Date of Collection:\s*(.*)/i,
+      /Collection Time:\s*(.*)/i,
+      /Date and Time Collected:\s*(.*)/i,
+      /Specimen Collection Date:\s*(.*)/i,
+      /Date Sample Taken:\s*(.*)/i,
+      /Date Drawn:\s*(.*)/i,
+      /Date Sample Collected:\s*(.*)/i,
+      /Date & Time of Collection:\s*(.*)/i,
+      /Draw Date:\s*(.*)/i,
+      /Collected On:\s*(.*)/i,
+      /Collection Date and Time:\s*(.*)/i,
+      /Sample Drawn:\s*(.*)/i,
+      /Date Collected:\s*(.*)/i,
+      /Collection Date:\s*(.*)/i,
+      dateRegex,
+    ];
 
-  const doctorRegexes = [
-    /Doctor:\s*(.*)/i,
-    /Referring Physician:\s*(.*)/i,
-    /Consultant:\s*(.*)/i,
-    /Attending Doctor:\s*(.*)/i,
-    /Physician:\s*(.*)/i,
-    /Doctor in Charge:\s*(.*)/i,
-    /Doctor Name:\s*(.*)/i,
-    /Referring Doctor:\s*(.*)/i,
-    /Medical Consultant:\s*(.*)/i,
-    /Consulting Doctor:\s*(.*)/i,
-    /Attending Physician:\s*(.*)/i,
-    /Reviewed by:\s*(.*)/i,
-    /Authorized by:\s*(.*)/i,
-    /Test Ordered by:\s*(.*)/i,
-    /Referred by:\s*(.*)/i,
-  ];
+    const doctorRegexes = [
+      /Doctor:\s*(.*)/i,
+      /Referring Physician:\s*(.*)/i,
+      /Consultant:\s*(.*)/i,
+      /Attending Doctor:\s*(.*)/i,
+      /Physician:\s*(.*)/i,
+      /Doctor in Charge:\s*(.*)/i,
+      /Doctor Name:\s*(.*)/i,
+      /Referring Doctor:\s*(.*)/i,
+      /Medical Consultant:\s*(.*)/i,
+      /Consulting Doctor:\s*(.*)/i,
+      /Attending Physician:\s*(.*)/i,
+      /Reviewed by:\s*(.*)/i,
+      /Authorized by:\s*(.*)/i,
+      /Test Ordered by:\s*(.*)/i,
+      /Referred by:\s*(.*)/i,
+    ];
 
-  const dateOfReportRegexes = [
-    /Date of Report:\s*(.*)/i,
-    /Report Date:\s*(.*)/i,
-    /Test Report Date:\s*(.*)/i,
-    /Result Date:\s*(.*)/i,
-    /Date of Result:\s*(.*)/i,
-    /Completion Date:\s*(.*)/i,
-    /Report Issued:\s*(.*)/i,
-    /Date Issued:\s*(.*)/i,
-    /Date Reported:\s*(.*)/i,
-    /Test Completed On:\s*(.*)/i,
-    /Date of Result Issued:\s*(.*)/i,
-    /Date Finalized:\s*(.*)/i,
-    /Report Generated On:\s*(.*)/i,
-    /Results Available:\s*(.*)/i,
-    /Issued On:\s*(.*)/i,
-    /Visit Date:\s*(.*)/i,
-    /Date of Visit:\s*(.*)/i,
-    dateRegex, 
-  ];
+    const dateOfReportRegexes = [
+      /Date of Report:\s*(.*)/i,
+      /Report Date:\s*(.*)/i,
+      /Test Report Date:\s*(.*)/i,
+      /Result Date:\s*(.*)/i,
+      /Date of Result:\s*(.*)/i,
+      /Completion Date:\s*(.*)/i,
+      /Report Issued:\s*(.*)/i,
+      /Date Issued:\s*(.*)/i,
+      /Date Reported:\s*(.*)/i,
+      /Test Completed On:\s*(.*)/i,
+      /Date of Result Issued:\s*(.*)/i,
+      /Date Finalized:\s*(.*)/i,
+      /Report Generated On:\s*(.*)/i,
+      /Results Available:\s*(.*)/i,
+      /Issued On:\s*(.*)/i,
+      /Visit Date:\s*(.*)/i,
+      /Date of Visit:\s*(.*)/i,
+      dateRegex,
+    ];
 
-  // Extract the required fields using multiple patterns
-  return {
-    name: extractField(nameRegexes),
-    age: extractField(ageRegexes),
-    gender: extractField(genderRegexes),
-    sampleId: extractField(sampleIdRegexes),
-    dateCollected: extractField(dateCollectedRegexes),
-    doctor: extractField(doctorRegexes),
-    dateOfReport: extractField(dateOfReportRegexes),
-  };
-}
-
-
+    // Extract the required fields using multiple patterns
+    return {
+      name: extractField(nameRegexes),
+      age: extractField(ageRegexes),
+      gender: extractField(genderRegexes),
+      sampleId: extractField(sampleIdRegexes),
+      dateCollected: extractField(dateCollectedRegexes),
+      doctor: extractField(doctorRegexes),
+      dateOfReport: extractField(dateOfReportRegexes),
+    };
+  }
 
 
-// ---------------------------
+
+
+  // ---------------------------
 
 
 
@@ -245,12 +245,12 @@ function parseLabReport(text) {
     const allText = labResults
       .map((result) => result.extractedText)
       .join("\n\n");
-      const { name, age, gender, sampleId, dateCollected, doctor, dateOfReport } = parseLabReport(allText);
-      console.log(allText)
+    const { name, age, gender, sampleId, dateCollected, doctor, dateOfReport } = parseLabReport(allText);
+    console.log(allText)
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     let systemprompt;
-    if(user?.subscriptionStatus === 'active') {
-       systemprompt = `
+    if (user?.subscriptionStatus === 'active') {
+      systemprompt = `
        Ensure the output is formatted using HTML elements like <h1>, <h2>, <table>, <th>, <td>, <p>, <ul>, and <li>. Use the following CSS classes and design guidelines to ensure readability and visual appeal:
 - Use a clean, modern font like "Roboto" or "Open Sans."
 - Apply  soft borders to tables for better readability.
@@ -348,13 +348,16 @@ Implications of Procrastination  For each health issue that is identified, you s
 
 `
     } else {
-       systemprompt = `Generate a basic summary report for the lab result and dont include any metrices from lab results in 6 to 7 lines. Ensure the output is formatted using HTML elements <p> 
+      systemprompt = `Generate a basic summary report for the lab result and dont include any metrices from lab results in 6 to 7 lines. Ensure the output is formatted using HTML elements <p> 
                         Use the following CSS classes and design guidelines to ensure readability and visual appeal:
                         - Use a clean, modern font like "Roboto" or "Open Sans."
                         - Apply  soft borders to tables for better readability.
                         
                         
                         - Add padding and margins to create a minimalist layout with plenty of whitespace.
+                        Additional Paragraph: After every report, include the following paragraph:
+                       <p> Upgrade today for a Comprehensive Health Report
+The information provided in this summary offers a basic overview of your health status based on the uploaded lab results. For a more detailed, personalized analysis and a comprehensive report on your health, including actionable insights and recommendations tailored to your needs, upgrade to our COMPREHENSIVE INSIGHTS plan. Unlock access to a full breakdown of your results, trends over time, and advanced features designed to empower you on your health journey.</p>
 `
     }
 
@@ -477,7 +480,7 @@ specified in the request while ensuring clarity and modern design."
         },
         { role: "user", content: prompt },
       ],
-     
+
     });
 
     const reportContent = completion.choices[0].message?.content;

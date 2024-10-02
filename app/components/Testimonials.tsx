@@ -203,7 +203,7 @@ const LabTestTypes: React.FC = () => {
           transition={{ type: "spring", stiffness: 300, damping: 15 }}
           key={index} className="border rounded-lg p-6 flex items-start space-x-4">
             <div className='flex items-center justify-center gap-4'>
-
+          
             <img src={test.imageUrl} alt={test.name} className="w-16 h-16 object-contain" />
             <div>
               <h2 className="text-lg font-semibold">{test.name}</h2>

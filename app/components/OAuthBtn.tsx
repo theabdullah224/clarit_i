@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import googleIcon from "@/public/Google.png";
 import { FaGithub } from "react-icons/fa";
 import Image from "next/image";
+import React from "react";
 // BorderAnimation component for the border animation effect
 const BorderAnimation = () => (
   <>

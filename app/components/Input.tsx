@@ -7,6 +7,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { z } from "zod";
 import axios from "axios";
 import Spinner from "./Spinner";
+import React from "react";
 
 const loginSchema = z.object({
   email: z.string().email(),

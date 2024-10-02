@@ -9,6 +9,7 @@ import { useState, useEffect, Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react"; // For dropdowns
 import avatar from '@/public/users-avatar.png'
 import Image from "next/image";
+import React from "react";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -44,7 +45,8 @@ const Navbar = () => {
           </Link>
           <Link href="/pricing">
             <button className="text-white  bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition">
-              Pricing
+              {session ? "Upgrade Now":"Pricing"}
+              
             </button>
           </Link>
           <Link href="/faqs">

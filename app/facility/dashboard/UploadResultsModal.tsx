@@ -12,7 +12,7 @@ import { useToast } from "@/app/components/ui/use-toast";
 import { createWorker } from 'tesseract.js';
 import * as PDFJS from 'pdfjs-dist';
 import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api';
-
+import { useSession } from "next-auth/react";
 interface LabResult {
   id: string;
   extractedText: string;
@@ -51,12 +51,44 @@ const UploadLabResultModal: React.FC<UploadLabResultModalProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
+  const { data: session } = useSession();
   const { toast } = useToast();
-
+  const [plan, setPlan] = useState(null);
   useEffect(() => {
     // Set up the worker source for pdfjs
     PDFJS.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
   }, []);
+
+
+  useEffect(() => {
+    const storedPlan = localStorage.getItem('userPlan');
+    
+    if (storedPlan) {
+      // @ts-ignore
+      setPlan(storedPlan);
+    }
+
+    if (session?.user?.id) {
+      fetch('/api/getUserPlan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: session.user.id }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            console.error(data.error);
+          } else {
+            setPlan(data.plan);
+            localStorage.setItem('userPlan', data.plan);
+          }
+        })
+        .catch((err) => console.error('Error fetching plan:', err));
+    }
+  }, [session]);
+
 
   const extractTextFromPdf = async (file: File): Promise<string> => {
     const arrayBuffer = await file.arrayBuffer();
@@ -144,6 +176,10 @@ const UploadLabResultModal: React.FC<UploadLabResultModalProps> = ({
   };
 
   const handleGenerateReport = async () => {
+    if(plan === "FREE"){
+
+    
+    console.log(session?.user.id)
     setIsProcessing(true);
     setProgress(50);
 
@@ -179,6 +215,9 @@ const UploadLabResultModal: React.FC<UploadLabResultModalProps> = ({
       setIsProcessing(false);
       setProgress(100);
     }
+  }else{
+    alert("Please Subscribe")
+  }
   };
 
   
@@ -191,6 +230,7 @@ const UploadLabResultModal: React.FC<UploadLabResultModalProps> = ({
           Upload Lab Results
         </Button>
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-lg">
         <h2 className="text-xl font-semibold mb-4">Upload Lab Results for {patient.name}</h2>
         <Dropzone

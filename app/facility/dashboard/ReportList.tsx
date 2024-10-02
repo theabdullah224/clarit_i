@@ -346,7 +346,7 @@ const ReportList: React.FC<ReportListProps> = ({ patientId }) => {
                 className="flex items-center space-x-2"
               >
                 <File className="w-4 h-4" />
-                <span>{emailButtonLabel[report.id] || "Send to mail"}</span> 
+                <span>{emailButtonLabel[report.id] || "Send to Email"}</span> 
                 {isSendingEmail[report.id] && (
                   <svg
                     className="animate-spin h-4 w-4 text-blue-500 ml-2"

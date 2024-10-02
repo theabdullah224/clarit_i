@@ -10,12 +10,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/app/components/ui/tooltip";
-import { Check, CircleAlert, HelpCircle, Minus,X } from "lucide-react";
+import { Check, CircleAlert, HelpCircle, Minus, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PLANS } from "../helpers/stripe"; // Ensure this path is correct
 import { cn } from "../helpers/utils"; // Ensure this utility function exists
-
+import { useSession } from "next-auth/react";
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
@@ -26,6 +26,7 @@ interface User {
 }
 
 const PricingClient = ({ user }: { user: User | null }) => {
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [loadingPlans, setLoadingPlans] = useState<Record<string, boolean>>({});
 
@@ -84,9 +85,14 @@ const PricingClient = ({ user }: { user: User | null }) => {
             "Quickly upload your lab result in JPEG or PDF format to receive a customized health summary.",
         },
         {
-          text: "Summary to your Health Report",
+          text: "Summary of your Health Report",
           footnote:
             "Upgrade to view the comprehensive analysis of your lab results",
+        },
+        {
+          text: "Full Comprehensive Report",
+          footnote: "Upgrade to see the optimal ranges for your lab biomarkers",
+          negative: true,
         },
         {
           text: "Optimal Ranges",
@@ -97,13 +103,19 @@ const PricingClient = ({ user }: { user: User | null }) => {
           text: "Actionable Interpretations",
           footnote:
             "Upgrade to receive actionable interpretations of your results",
-            negative: true,
+          negative: true,
         },
         {
           text: "Recommendations",
           footnote:
             "Upgrade to receive Basic diet, supplement, and lifestyle recommendations",
-            negative: true,
+          negative: true,
+        },
+        {
+          text: "Digital Sharing",
+          footnote:
+            "Seamlessly share your results with your doctor via a simple click",
+          negative: true,
         },
       ],
     },
@@ -223,7 +235,7 @@ const PricingClient = ({ user }: { user: User | null }) => {
   ];
 
   return (
-    <div className="pt-12 px-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10 2xl:grid-cols-4 max-w-[2500px]">
+    <div className="pt-12 px-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-10 2xl:grid-cols-4 max-w-[2500px] ">
       <TooltipProvider>
         {pricingItems.map(({ plan, tagline, quota, features }) => {
           const matchedPlan = PLANS.find(
@@ -244,9 +256,9 @@ const PricingClient = ({ user }: { user: User | null }) => {
             <div
               key={plan}
               className={cn(
-                "relative rounded-2xl bg-white shadow-lg flex flex-col justify-between",
+                "relative rounded-2xl bg-white shadow-lg flex flex-col  border-2 border-red-600",
                 {
-                  "border border-gray-200 shadow-blue-200":
+                  "border border-gray-200 shadow-blue-200 ":
                     plan === "Comprehensive Insights" ||
                     plan === "Health Tracker",
                   "border border-gray-200":
@@ -260,20 +272,27 @@ const PricingClient = ({ user }: { user: User | null }) => {
                   Upgrade now
                 </div>
               )} */}
-              <div className="p-5">
+              <div className="p-5   h-[16rem]">
                 <h3 className="my-3 text-center font-display text-2xl font-bold">
                   {plan}
                 </h3>
                 <p className="text-gray-500 text-center text-sm">{tagline}</p>
                 <p className="my-5 font-display text-6xl font-semibold text-center">
                   {plan !== "Unlimited Wellness" && (
-                    <span className="text-4xl font-bold">${price || 0}{plan === "Health Tracker" && "/month"}</span>
+                    <span className="text-4xl font-bold flex items-end justify-center ">
+                      US${price || 0}
+                      {plan === "Health Tracker" && (
+                        <span className="text-sm">/month</span>
+                      )}
+                    </span>
                   )}
                 </p>
 
                 {/* Conditional text based on plan type */}
                 {plan === "Health Tracker" && (
-                  <p className="text-gray-500 text-center text-sm">Upload 50 Lab reports</p>
+                  <p className="text-gray-500 text-center text-sm">
+                    Upload 50 Lab reports
+                  </p>
                 )}
 
                 {plan === "Comprehensive Insights" && (
@@ -313,12 +332,11 @@ const PricingClient = ({ user }: { user: User | null }) => {
                 </div>
               </div>
 
-              <ul className="my-10 space-y-5 px-8">
+              <ul className="my-10 space-y-5 px-8 h-[18rem]">
                 {features.map(({ text, footnote, negative }) => (
                   <li key={text} className="flex space-x-5">
                     <div className="flex-shrink-0">
                       {negative ? (
-                        
                         <X className="h-6 w-6 text-red-600" />
                       ) : (
                         <Check className="h-6 w-6 text-blue-500" />
@@ -354,23 +372,36 @@ const PricingClient = ({ user }: { user: User | null }) => {
                   </li>
                 ))}
               </ul>
-              <div className="border-t border-gray-200" />
-              <div className="p-5">
+              <div className="border-t border-gray-200 " />
+              <div className="p-5 flex items-center ">
                 {plan === "Basic Snapshot" ? (
                   <Link
+                    onClick={(e)=>{if (user?.role === "FACILITY") {
+                      e.preventDefault(); // Prevents the link from navigating
+                      alert("Not allowed");
+                    }}}
                     href={
                       user?.role === "FACILITY"
                         ? "/facility/dashboard"
                         : "/dashboard"
                     }
-                    className="text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition"
+                    
+                    className={` ${
+                      plan === "Basic Snapshot" &&
+                      user?.role === "FACILITY" &&
+                      "cursor-not-allowed"
+                    }  text-white  bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg hover:bg-white hover:text-black transition`}
                   >
-                    {user ? "Go to Dashboard" : "Login"}
+                    {session
+                      ? user?.role === "FACILITY"
+                        ? "Not Availible"
+                        : "Go to Dashboard"
+                      : "Select"}
                   </Link>
                 ) : plan === "Unlimited Wellness" ? null : (
                   <button
                     onClick={() => {
-                      if (!user) {
+                      if (!session) {
                         router.push("/login");
                         return;
                       }
@@ -378,9 +409,9 @@ const PricingClient = ({ user }: { user: User | null }) => {
                         console.error(`Price ID not found for plan: ${plan}`);
                         return;
                       }
-                      if (!isPlanAllowed) {
+                      if (!isPlanAllowed && session) {
                         alert(
-                          "You are not authorized to subscribe to this plan. Sign up as a Facility user to subscribe to this plan"
+                          "In order to access this plan, you will be required to log out and sign up as a new health facility."
                         );
                         return;
                       }
@@ -388,20 +419,20 @@ const PricingClient = ({ user }: { user: User | null }) => {
                     }}
                     disabled={isLoading}
                     className={cn(
-                      "text-white bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg transition disabled:bg-gray-400",
+                      "text-white hover:bg-white hover:text-black  bg-black border border-black text-lg px-4 md:px-6 py-2 font-semibold rounded-lg transition disabled:bg-gray-400",
                       {
                         "hover:bg-white hover:text-black": isPlanAllowed,
-                        "cursor-not-allowed": !isPlanAllowed,
+                        "cursor-not-allowed": !isPlanAllowed && session,
                       }
                     )}
                   >
                     {isLoading
                       ? "Processing..."
-                      : user
+                      : session
                       ? isPlanAllowed
                         ? "Upgrade now"
-                        : "Not Available"
-                      : "Sign up"}
+                        : "Upgrade now"
+                      : "Select"}
                   </button>
                 )}
               </div>

@@ -9,10 +9,59 @@ import { Progress } from "@/app/components/ui/progress";
 import { useToast } from "@/app/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { createWorker } from 'tesseract.js';
-
+import { useSession } from "next-auth/react";
 // PDF.js imports
 import * as PDFJS from 'pdfjs-dist';
-import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api';
+import * as pdfjsLib from 'pdfjs-dist/webpack';
+// import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api';
+// 
+// import { getDocument } from 'pdfjs-dist/build/pdf.mjs';
+
+async function getDocument(url: string | ArrayBuffer) {
+  // Step 1: Fetch the PDF document from the URL or ArrayBuffer
+  let pdfData: ArrayBuffer;
+
+  if (typeof url === 'string') {
+    // Fetch the PDF from the URL
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Error fetching the PDF file');
+    }
+    pdfData = await response.arrayBuffer();
+  } else {
+    // PDF is already provided as an ArrayBuffer
+    pdfData = url;
+  }
+
+  // Step 2: Parse the PDF (this is extremely simplified)
+  const pdfDocumentProxy = parsePDF(pdfData); // Placeholder for actual PDF.js logic
+
+  // Return a promise that resolves to a PDFDocumentProxy object
+  return pdfDocumentProxy;
+}
+
+// Step 3: A function that mimics PDF parsing (in reality, it's much more complex)
+function parsePDF(pdfData: ArrayBuffer): any {
+  // Normally, this would involve decoding the PDF binary structure
+  // and extracting objects like pages, metadata, etc.
+  // We'll just return a mock object for simplicity.
+  return {
+    numPages: 5,
+    getPage: function (pageNumber: number) {
+      return new Promise((resolve) => {
+        resolve({
+          pageNumber,
+          render: function () {
+            console.log(`Rendering page ${pageNumber}`);
+            return {
+              promise: Promise.resolve(),
+            };
+          },
+        });
+      });
+    },
+  };
+}
 
 interface LabResult {
   id: string;
@@ -28,34 +77,78 @@ const UploadResultsModal = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [labResults, setLabResults] = useState<LabResult[]>([]);
+  const { data: session } = useSession();
   const { toast } = useToast();
+  const [plan, setPlan] = useState(null);
 
+  useEffect(() => {
+    const storedPlan = localStorage.getItem('userPlan');
+    
+    if (storedPlan) {
+      // @ts-ignore
+      setPlan(storedPlan);
+    }
+
+    if (session?.user?.id) {
+      fetch('/api/getUserPlan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: session.user.id }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            console.error(data.error);
+          } else {
+            setPlan(data.plan);
+            localStorage.setItem('userPlan', data.plan);
+          }
+        })
+        .catch((err) => console.error('Error fetching plan:', err));
+    }
+  }, [session]);
+
+  
   useEffect(() => {
     // Set up the worker source for pdfjs
     PDFJS.GlobalWorkerOptions.workerSrc = '/pdf.worker.js';
   }, []);
 
-  const extractTextFromPdf = async (file: File): Promise<string> => {
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await PDFJS.getDocument({ data: arrayBuffer }).promise;
-    let fullText = '';
 
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items
-        .map((item: TextItem | TextMarkedContent) => {
-          if ('str' in item) {
+  const extractTextFromPdf = async (file: File): Promise<string> => {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await getDocument({ data: arrayBuffer }).promise;
+      let fullText = '';
+  
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        console.log("------>>>",textContent)
+        const pageText = textContent.items
+        .map((item: any) => { // Use 'any' if types are not defined
+          if (item && 'str' in item) {
             return item.str;
           }
           return '';
         })
         .join(' ');
-      fullText += pageText + ' ';
+        console.log(pageText)
+  
+        fullText += pageText + ' ';
+        console.log(fullText)
+      }
+  
+      return fullText;
+    } catch (error) {
+      console.log('Error extracting text from PDF:', error);
+      return '';
     }
-
-    return fullText;
   };
+
+
 
   const extractTextFromImage = async (file: File) => {
     const worker = await createWorker('eng');
@@ -66,6 +159,7 @@ const UploadResultsModal = () => {
   };
 
   const processFiles = async (files: File[]) => {
+    
     setIsProcessing(true);
     setProgress(0);
     setLabResults([]); // Reset previous lab results
@@ -140,6 +234,9 @@ const UploadResultsModal = () => {
   };
 
   const handleGenerateReport = async () => {
+    if(plan === "FREE"){
+
+    
     if (labResults.length === 0) {
       toast({
         title: "No Lab Results",
@@ -205,6 +302,10 @@ const UploadResultsModal = () => {
       setIsProcessing(false);
       setProgress(100);
     }
+  }else{
+    alert("Please Subscribe")
+  }
+
   };
 
   // Helper function to convert base64 to Blob

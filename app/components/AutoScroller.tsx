@@ -1,4 +1,5 @@
 "use client"
+import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 
 const logos = [
@@ -38,6 +39,8 @@ const LogoCarousel = () => {
     }, 2000);
 
     return () => clearInterval(interval);
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isHovered]);
 
   useEffect(() => {
@@ -61,7 +64,7 @@ const LogoCarousel = () => {
       >
         {[...logos, ...logos.slice(0, visibleLogos)].map((logo, index) => (
           <div key={index} className="flex-none w-1/5 flex items-center justify-center">
-            <img src={logo} alt={`Logo ${index + 1}`} className="w-28 h-auto max-w-xs p-2" />
+            <Image src={logo} alt={`Logo ${index + 1}`} className="w-28 h-auto max-w-xs p-2" />
           </div>
         ))}
       </div>
