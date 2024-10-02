@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import prisma from "@/prisma"
 import { z } from 'zod';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '../auth/[...nextauth]';
 
 // Define request body schema using Zod
 const uploadResultsSchema = z.object({

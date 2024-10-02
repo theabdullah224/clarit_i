@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import prisma from '@/prisma'; // Adjust this path based on your project structure
 import { z } from 'zod';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '../../auth/[...nextauth]';
 
 // Define request body schema using Zod
 const addPatientSchema = z.object({

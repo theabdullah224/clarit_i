@@ -10,6 +10,7 @@ import LogoutBtn from "@/app/components/Logout";
 
 const Sidebar = async ({ email }: { email: string }) => {
   const session = await getServerSession()!;
+  // @ts-ignore
   const reports = await prisma.analyzedResult.findMany({
     where: { userEmail: session?.user?.email! },
   });

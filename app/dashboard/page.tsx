@@ -1,7 +1,7 @@
 // app/dashboard/page.tsx
 // simple user dashbaord
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "../api/auth/[...nextauth]";
 import prisma from '@/prisma';
 import UserDashboardClient from "./UserDashboardClient";
 

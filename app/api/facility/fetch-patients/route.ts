@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth/next';
 
 import prisma from '@/prisma';
 import { z } from 'zod';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '../../auth/[...nextauth]';
 
 // Define request body schema using Zod (empty in this case)
 const fetchPatientsSchema = z.object({});

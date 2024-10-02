@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import prisma from '@/prisma';
 import { z } from 'zod';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '../../auth/[...nextauth]';
 import { sendPdfEmail } from '@/app/helpers/pdfEmailSender';
 
 const sendPatientEmailSchema = z.object({

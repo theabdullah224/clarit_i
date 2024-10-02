@@ -3,7 +3,7 @@
 import { getServerSession } from "next-auth";
 import PricingClient from "./PricingClient";
 import Footer from "../components/Footer";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 const PricingPage = async () => {
   const session = await getServerSession(authOptions);

@@ -1,5 +1,5 @@
 "use client";
-import authOptions from "../auth/authOptions";
+// import authOptions from "../auth/authOptions";
 import Image from "next/image";
 import pfp from "@/public/user-pfp.png";
 import { useSession } from "next-auth/react";

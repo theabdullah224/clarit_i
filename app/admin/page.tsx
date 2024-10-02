@@ -1,7 +1,7 @@
 // app/admin/page.tsx
 'use client'
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "../api/auth/[...nextauth]";
 import { PrismaClient, Role } from "@prisma/client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";

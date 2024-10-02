@@ -5,7 +5,7 @@ import { getServerSession } from 'next-auth/next';
 import prisma from "@/prisma"
 
 import { z } from 'zod';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]';
 
 // Define request params schema using Zod
 const paramsSchema = z.object({

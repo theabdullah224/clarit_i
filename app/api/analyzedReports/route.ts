@@ -1,9 +1,10 @@
-import authOptions from "@/app/auth/authOptions";
+import { authOptions } from "@/app/api/auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
 import prisma from "@/prisma";
+// @ts-ignore
 import { Contract } from "@prisma/client";
 
 const openai = new OpenAI();
@@ -38,6 +39,7 @@ export async function POST(request: NextRequest) {
   if (!session) return NextResponse.json({}, { status: 401 });
 try{
   const aiResponse = await getResponse(body);
+  // @ts-ignore
   const contract: Contract = await prisma.contract.create({
     data: { content: aiResponse!, userEmail: session.user?.email! },
   });

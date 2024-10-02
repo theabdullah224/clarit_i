@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import prisma from "@/prisma";
 import { OpenAI } from "openai";
 import { z } from "zod";
-import { authOptions } from "../../auth/[...nextauth]/route";
+import { authOptions } from "../../auth/[...nextauth]";
 
 const uploadLabResultSchema = z.object({
   patientId: z.string().nonempty('Patient ID is required'),

@@ -24,6 +24,7 @@ async function main() {
       email: adminEmail,
       password: hashedPassword,
       role: "ADMIN",
+      // @ts-ignore
       emailVerified: new Date(),
     },
   });

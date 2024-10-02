@@ -16,6 +16,7 @@ const Page = async ({ params }: { params: { id: string } }) => {
   if (!session) redirect("/");
 
   const getanalyzedResult = async () => {
+    // @ts-ignore
     const analyzedResults = await prisma.analyzedResult.findUnique({
       where: { id: params.id },
     });

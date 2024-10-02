@@ -12,7 +12,7 @@ import { createWorker } from 'tesseract.js';
 import { useSession } from "next-auth/react";
 // PDF.js imports
 import * as PDFJS from 'pdfjs-dist';
-import * as pdfjsLib from 'pdfjs-dist/webpack';
+// import * as pdfjsLib from 'pdfjs-dist';
 // import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api';
 // 
 // import { getDocument } from 'pdfjs-dist/build/pdf.mjs';
@@ -120,6 +120,7 @@ const UploadResultsModal = () => {
   const extractTextFromPdf = async (file: File): Promise<string> => {
     try {
       const arrayBuffer = await file.arrayBuffer();
+      // @ts-ignore
       const pdf = await getDocument({ data: arrayBuffer }).promise;
       let fullText = '';
   

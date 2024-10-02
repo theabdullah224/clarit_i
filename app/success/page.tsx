@@ -1,7 +1,7 @@
 // payment success
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 export default async function SuccessPage() {
   const session = await getServerSession(authOptions);

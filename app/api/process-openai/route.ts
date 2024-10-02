@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import prisma from "@/prisma"; // Ensure this path is correct based on your project structure
 import { OpenAI } from "openai";
 import { z } from "zod";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { authOptions } from "../auth/[...nextauth]";
 
 // Define request body schema using Zod
 const processOpenAISchema = z.object({

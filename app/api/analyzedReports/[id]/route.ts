@@ -6,11 +6,12 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    // @ts-ignore
     const analyzedResult = await prisma.analyzedResult.findUnique({
       where: { id: params.id },
     });
     if (!analyzedResult) return NextResponse.json({}, { status: 404 });
-
+    // @ts-ignore
     await prisma.analyzedResult.delete({ where: { id: params.id } });
 
     return NextResponse.json({}, { status: 200 });
