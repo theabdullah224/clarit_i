@@ -1,273 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprehensive Health Analysis Report</title>
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 20px;
-            line-height: 1.6;
-        }
-
-        h1 {
-            color: #4CAF50;
-        }
-
-        h2 {
-            color: #2196F3;
-        }
-
-        ul,
-        table {
-            margin: 20px 0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-
-        th,
-        td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .highlight {
-            background-color: #FFEB3B;
-        }
-
-        .recommendation {
-            font-weight: bold;
-            color: #d9534f; /* Bootstrap danger color */
-        }
-    </style>
+  <title>Report</title>
+  <style>
+    body { font-family: Arial, sans-serif; color: black; }
+  body main{
+      margin-top: 40px; 
+      margin-bottom: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content:space-between;
+     
+      min-height: 100vh;
+      
+  }
+    header {   color:black; }
+    header img { height: 80px;   }
+     main div{
+  border-bottom: 1px solid black;
+  
+  color:black;
+}
+  footer {
+text-align: center; /* Center text in footer */
+      font-style: italic; /* Italic text */
+      color: darkgray; /* Footer text color */
+      padding: 10px 0; /* Padding for spacing */
+      background-color: transparent; /* Optional: Background color for footer */
+      p
+  }
+  </style>
 </head>
-
 <body>
-
-    <p><b>Comprehensive health analysis report for:</b></p>
-    <div>
-        <b>Patient Information:</b>
-        <ul>
-            <li><b>Name: </b>[Patient Name]</li>
-            <li><b>Age: </b>[Patient Age]</li>
-            <li><b>Gender: </b>[Patient Gender]</li>
-            <li><b>Sample ID: </b>[Sample ID]</li>
-            <li><b>Date Collected: </b>[Date Collected]</li>
-            <li><b>Doctor: </b>[Doctor Name]</li>
-            <li><b>Date of Report: </b>30-09-2024 (4:09 PM)</li>
-        </ul>
-    </div>
-
-    <h1>Health Analysis Summary</h1>
-
-    <h2>Report Overview</h2>
-
-    <h3>Summary of Key Health Metrics</h3>
-    <table>
-        <tr>
-            <th>Metric</th>
-            <th>Value</th>
-            <th>Standard Range</th>
-            <th>Interpretation</th>
-        </tr>
-        <tr>
-            <td>WBC Count</td>
-            <td>13,700</td>
-            <td>4,000 - 11,000 mm<sup>3</sup></td>
-            <td class="highlight">Elevated - Potential infection or inflammation</td>
-        </tr>
-        <tr>
-            <td>RBC Count</td>
-            <td>5.59</td>
-            <td>4.5 - 6.0 mil/mm<sup>3</sup></td>
-            <td>Within range - Healthy red blood cell production</td>
-        </tr>
-        <tr>
-            <td>Haemoglobin</td>
-            <td>17.5</td>
-            <td>14.0 - 18.0 g/dL</td>
-            <td>Within range - Adequate oxygen-carrying capacity</td>
-        </tr>
-        <tr>
-            <td>Hematocrit</td>
-            <td>49%</td>
-            <td>40 - 50%</td>
-            <td>Within range</td>
-        </tr>
-        <tr>
-            <td>Platelet Count</td>
-            <td>214,000</td>
-            <td>140,000 - 425,000/mm<sup>3</sup></td>
-            <td>Within range - Normal clotting function</td>
-        </tr>
-        <tr>
-            <td>Neutrophils</td>
-            <td>78%</td>
-            <td>50 - 70%</td>
-            <td class="highlight">Elevated - Suggests possible infection</td>
-        </tr>
-        <tr>
-            <td>Lymphocytes</td>
-            <td>13%</td>
-            <td>25 - 40%</td>
-            <td class="highlight">Low - May suggest immune deficiency</td>
-        </tr>
-        <tr>
-            <td>Monocytes</td>
-            <td>8%</td>
-            <td>2 - 10%</td>
-            <td>Within range</td>
-        </tr>
-        <tr>
-            <td>Eosinophils</td>
-            <td>0</td>
-            <td>1 - 4%</td>
-            <td>Low - May suggest possible allergies</td>
-        </tr>
-    </table>
-
-    <h3>Detailed Analysis & Recommendations</h3>
-
-    <p>
-        The elevated WBC count indicates a possible infection or inflammation in the body. Reinforcing your immune system may be beneficial. 
-It's advisable to include a diet rich in antioxidants, such as fruits and vegetables. Jamaican herbs like Cerasee and Ginger can also enhance immune function.
-    </p>
-
-    <p>
-        For the elevated Neutrophils, increasing your intake of Vitamin C-rich foods (citrus fruits, berries) may help reduce inflammation. Lifestyle changes that include regular exercise and adequate sleep are also recommended.
-    </p>
-
-    <p>
-        The low Lymphocyte count may warrant further investigation. Consider increasing your intake of foods rich in zinc (pumpkin seeds, legumes) and vitamin D (fatty fish). Supplementation of Zingiber (Ginger) could also be explored.
-    </p>
-
-    <h3>Health Risk Assessment</h3>
-    <table>
-        <tr>
-            <th>Condition</th>
-            <th>Risk Level</th>
-        </tr>
-        <tr>
-            <td>Diabetes</td>
-            <td>Moderate</td>
-        </tr>
-        <tr>
-            <td>Cardiovascular Diseases</td>
-            <td>High</td>
-        </tr>
-        <tr>
-            <td>Liver Diseases</td>
-            <td>Low</td>
-        </tr>
-        <tr>
-            <td>Kidney Diseases</td>
-            <td>Low</td>
-        </tr>
-        <tr>
-            <td>Cancer</td>
-            <td>Low</td>
-        </tr>
-    </table>
-
-    <h3>Trends and Observations</h3>
-    <p>
-        The data shows a trend of elevated white blood cells, primarily neutrophils, which frequently indicates an ongoing infection. Lifestyle changes, including a balanced diet and appropriate exercise, may help manage this concern.
-    </p>
-
-    <h3>Probability of Dysfunction</h3>
-    <p>
-        There is a significant probability of dysfunction in the immune response, indicated by elevated neutrophils and decreased lymphocytes, which necessitate immediate attention toward dietary habits and possibly lifestyle adjustments.
-    </p>
-
-    <h3>What to Ask Your Doctor on Your Next Visit</h3>
-    <h4>Regarding Elevated WBC and Neutrophil Levels</h4>
-    <ul>
-        <li>What could be the potential causes of my elevated WBC and neutrophils?</li>
-        <li>Do you recommend further tests to identify an underlying issue?</li>
-        <li>What lifestyle changes can I make to improve my immune health?</li>
-    </ul>
-    <h4>Regarding Low Lymphocyte Count</h4>
-    <ul>
-        <li>What dietary changes do you recommend to address my low lymphocyte levels?</li>
-        <li>Should I consider supplements to boost my immune response?</li>
-    </ul>
-
-    <h3>Personalized Health Insights</h3>
-    <p>
-        As a [Patient's Age] year old [Patient's Gender], consider focusing on a diet rich in fruits, lean proteins, and whole grains. Hydration is essential, along with regular physical activity tailored to your fitness level.
-    </p>
-
-    <h3>Lifestyle and Environmental Factors</h3>
-    <p>
-        Evaluate your lifestyle habits such as smoking and alcohol consumption which may adversely affect your health. Aim to reduce or eliminate these habits, while increasing physical activity and engagement in stress-reducing practices like yoga or meditation.
-    </p>
-
-    <h3>Genetic Predispositions</h3>
-    <p>
-        If there’s a family history of immune disorders or chronic conditions, it is crucial to discuss these dynamics with your healthcare professional to tailor your monitoring and preventive strategies appropriately.
-    </p>
-
-    <h3>Mental Health Indicators</h3>
-    <p>
-        Potential elevated stress or anxiety can be monitored through lifestyle factors like sleep patterns, exercise findings, and general mood maintenance strategies. Meditation and stress management techniques could be of benefit.
-    </p>
-
-    <h3>Immune System Function</h3>
-    <p>
-        Regular monitoring of your white blood cell counts and associated biomarkers can provide extensive insights into your immune system's health. Aim to maintain good general health to encourage optimal immunity.
-    </p>
-
-    <h3>Hydration Status</h3>
-    <p>
-        Hydration is critical for optimal cellular function. Ensure adequate fluid intake, especially if there are indications of dehydration in blood tests, which can affect overall health outcomes.
-    </p>
-
-    <h3>Bone Health</h3>
-    <p>
-        Consider getting calcium and vitamin D levels evaluated regularly, especially if there’s a family history of osteoporosis or if you have risk factors associated with bone health.
-    </p>
-
-    <h3>Hormonal Balance</h3>
-    <p>
-        Hormonal imbalances can impact your overall health significantly. Discuss with your doctor potential hormonal testing if experiencing symptoms like fatigue, weight changes, or mood swings.
-    </p>
-
-    <h3>Gut Health</h3>
-    <p>
-        Maintaining a healthy gut microbiome is essential. Incorporate probiotics and fiber-rich foods into your diet to promote digestive health. Consult your doctor if you experience persistent digestive issues.
-    </p>
-
-    <h3>Possible Causes</h3>
-    <p>
-        The identified health issues may stem from various factors, such as poor eating habits, high-stress levels, and even genetic predispositions. A comprehensive approach that includes diet, lifestyle modifications, and possibly evaluating family health history can provide insights into managing these conditions.
-    </p>
-
-    <h3>Implications of Procrastination</h3>
-    <p>
-        Delaying action on health concerns may lead to worsened conditions, increased healthcare costs, and potential chronic health issues. 
-Early intervention can significantly improve health outcomes and overall quality of life.
-    </p>
-
-    <h2>Conclusion</h2>
-    <p>
-        The primary areas of concern noted in this report are the elevated WBC and neutrophil counts, coupled with a low lymphocyte count. Recommended actions include a review of dietary choices, introduction of beneficial herbs, lifestyle adjustments towards a more balanced routine, and scheduling further blood tests to monitor these aspects more closely.
-    </p>
-
+  <header>
+    
+    
+  </header>
+  <main style="border-bottom: none">
+    <img src="data:image/png;base64,${logoBase64}" alt="Logo" />
+    
+    ${report.content.replace(/```html|```/g, "").trim()}
+   
+    <Footer>
+    <p>Disclaimer:This report has been generated by a proprietary AI Health Analysis tool (LLM) and is intended for informational purposes only. It is not designed to diagnose, treat, or replace the expertise and care of a licensed medical professional. Please consult your healthcare provider for personalized medical advice based on your specific health needs.</p>
+    </Footer>
+    </main>
 </body>
-
 </html>

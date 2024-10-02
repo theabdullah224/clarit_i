@@ -66,6 +66,7 @@ export async function POST(request: Request) {
 
     // Regular expressions for each field with different possible variations
     const nameRegexes = [
+      /(Full Name|Patient Name|Client Name|Subject Name|Individual Name|Patient Full Name|Name of the Patient|First and Last Name|Complete Name|Personal Name|Identified Name|Client Full Name|Person Name|Beneficiary Name|Examinee Name|Patient Identification Name|Applicant Name|Case Name|Medical Record Name|Official Name|Patient Label|Registered Name|Reportee Name|Full Legal Name|Healthcare Recipient Name|Medical ID Name|Name of Client|Examination Name|Laboratory Subject Name|Investigation Name|Sample Recipient Name|Requestor Name|Citizen Name|Report Recipient Name|Individual Identifier|Treatment Recipient Name|Testee Name|Person Being Tested|Investigation Subject|Sample Provider Name|Person Under Investigation|Registered Patient Name|Full Identification Name|Healthcare Subject|Requesting Person|Beneficiary Identity|Test Subject Name|Health Recipient Name|Person of Interest|Specimen Owner):\s*(.*)/i,
       /Name:\s*(.*)/i,
       /Patient Name:\s*(.*)/i,
       /Full Name:\s*(.*)/i,
@@ -89,6 +90,7 @@ export async function POST(request: Request) {
     ];
 
     const ageRegexes = [
+      /(Patient Age|Client Age|Subject Age|Current Age|Age of Patient|Chronological Age|Recorded Age|Reported Age|Investigated Age|Age in Years|Years of Age|Age in Months|Biological Age|Applicant Age|Age at Testing|Date of Birth|Individual Age|Testee Age|Medical Age|Verified Age|Calculated Age|Years of Life|Life Years|Estimated Age|Self-Reported Age|Documented Age|Clinical Age|Age Detail|Exact Age|Birth Age|Identified Age|Recorded Age of Patient|Reportee Age|Examination Age|Legal Age|Test Age|Patient's Chronological Age|Registered Age|Age at Collection|Age of Individual|Examination Subject Age|Age Data|Age Recorded|Age in Record|Healthcare Age|Age Group|Sample Recipient Age|Age at Time of Test|Age Range):\s*(.*)/i,
       /Age:\s*(.*)/i,
       /Patient Age:\s*(.*)/i,
       /Years old:\s*(.*)/i,
@@ -111,8 +113,11 @@ export async function POST(request: Request) {
     ];
 
     const genderRegexes = [
+      /(Sex|Gender Identity|Biological Sex|Male\/Female|Gender \(M\/F\)|Gender \(Male\/Female\/Other\)|Gender Assigned at Birth|Patient Gender|Reported Gender|Gender Type|Legal Gender|Sex Category|Medical Gender|Client Gender|Gender Classification|Registered Gender|Sex\/Gender|Examination Gender|Subject Gender|Gender Marker|Gender Details|Gender Code|Biological Gender|Male\/Female\/Non-Binary|Self-Reported Gender|Gender \(Male\/Female\/Unknown\)|Assigned Gender|Gender Designation|Verified Gender|Official Gender|Documented Gender|Sex Identity|Gender Notation|Person’s Gender|Health Gender|Sex of Patient|Gender \(Sex\)|Gender Data|Clinical Gender|Gender Label|Examination Subject Gender|Registered Sex|Healthcare Gender|Gender at Birth|Sample Recipient Gender|Sex Information|Gender in Records|Gender-Based Identification|Gender in Medical Records|Gender of Individual):\s*(.*)/i,
       /Gender:\s*(.*)/i,
       /Sex:\s*(.*)/i,
+      /sex\s*(.*)/i,
+      /sex:\s*(.*)/i,
       /Patient Gender:\s*(.*)/i,
       /Biological Sex:\s*(.*)/i,
       /Sex\s*:\s*(.*)/i,
@@ -132,7 +137,10 @@ export async function POST(request: Request) {
     ];
 
     const sampleIdRegexes = [
+      /(Specimen ID|Lab Sample ID|Test ID|Specimen Number|Sample Identifier|Test Specimen ID|Unique Sample ID|Lab Specimen Number|Investigation ID|Barcode Number|Collection ID|Sample Reference Number|Accession Number|Sample Tracking ID|Specimen Tracking Number|Lab Sample Number|Sample Code|Reference Specimen Number|Collected Sample ID|Test Request ID|Examination ID|Medical Sample ID|Report Number|Specimen Code|Unique Specimen Identifier|Lab Reference Number|Case Number|Collected Specimen ID|Test Identifier|Sample Receipt ID|Laboratory Reference ID|Identification Code|Specimen Collection Number|Sample Registration Number|Test Reference Number|Investigation Sample ID|Lab Test Code|Specimen Barcode|Laboratory Test ID|Lab Identifier|Sample Label|Clinical Specimen Number|Tracking ID for Sample|Diagnostic Sample ID|Specimen Label|Collection Reference Number|Sample Registration ID|Specimen Receipt ID|Specimen Reference Code):\s*(.*)/i,
       /Sample ID:\s*(.*)/i,
+      /No:\s*(.*)/i,
+      /no:\s*(.*)/i,
       /Specimen ID:\s*(.*)/i,
       /ID Number:\s*(.*)/i,
       /Accession Number:\s*(.*)/i,
@@ -153,7 +161,9 @@ export async function POST(request: Request) {
     ];
 
     const dateCollectedRegexes = [
+      /(Collection Date|Specimen Collection Date|Sample Collection Date|Date of Sample|Date of Specimen Collection|Collected On|Date of Collection|Collection Time|Date\/Time of Collection|Date Sample Collected|Specimen Collected On|Sample Taken On|Collection Date\/Time|Date Sample Received|Date and Time Collected|Date Sample Was Taken|Collection Timestamp|Date of Taking Sample|Specimen Taken On|Date of Sample Collection|Date\/Time Sample Collected|Collected Date|Date Collected Specimen|Time of Sample Collection|Date Test Sample Collected|Specimen Retrieval Date|Collection Date-Time|Date of Collection Event|Collection Information|Date of Laboratory Collection|Sample Acquisition Date|Date and Time of Sample|Collection Event Time|Date Collected Test|Time Collected Sample|Date Time Sample Taken|Collection Moment|Collection Event Date|Date of Specimen Gathering|Collection Occurrence|Timestamp of Collection|Date of Gathering|Collection Report Time|Sample Event Date|Date Taken|Date Captured|Specimen Date|Sample Timing|Collection of Sample Date):\s*(.*)/i,
       /Date Collected:\s*(.*)/i,
+      /Order Date:\s*(.*)/i,
       /Collection Date:\s*(.*)/i,
       /Sample Collection Date:\s*(.*)/i,
       /Date of Collection:\s*(.*)/i,
@@ -174,7 +184,9 @@ export async function POST(request: Request) {
     ];
 
     const doctorRegexes = [
+      /(Ordering Physician|Referring Doctor|Attending Physician|Medical Practitioner|Physician Name|Consultant Name|Doctor’s Name|Healthcare Provider|Responsible Physician|Test Ordered By|Treating Physician|Referring Clinician|Doctor on Duty|Consulting Doctor|Doctor in Charge|Test Ordered By|Primary Care Physician|Healthcare Professional|Test Requested By|Consultant in Charge|Medical Officer|Test Physician|Doctor Requesting Test|Requesting Physician|Treating Doctor|Referring Doctor|Physician Attending|Medical Consultant|Healthcare Professional|Medical Doctor|Referring Physician|Attending Doctor|Test Requestor|Test Supervisor):\s*(.*)/i,
       /Doctor:\s*(.*)/i,
+      /By:\s*(.*)/i,
       /Referring Physician:\s*(.*)/i,
       /Consultant:\s*(.*)/i,
       /Attending Doctor:\s*(.*)/i,
@@ -249,6 +261,8 @@ export async function POST(request: Request) {
     console.log(allText)
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     let systemprompt;
+
+
     if (user?.subscriptionStatus === 'active') {
       systemprompt = `
        Ensure the output is formatted using HTML elements like <h1>, <h2>, <table>, <th>, <td>, <p>, <ul>, and <li>. Use the following CSS classes and design guidelines to ensure readability and visual appeal:
@@ -391,16 +405,46 @@ The information provided in this summary offers a basic overview of your health 
         </ul>
     </div>
             <h1>Health Analysis Summary</h1>
-            <h2> Report Overview </h2>
+            
 
-     Summary of Key Health Metrics
-   Create a table with the following columns:
-   | Metric | Value | Standard Range | Interpretation |
+    <h2> Summary of Key Health Metrics</h2>
+  <table >
+  <thead>
+    <tr >
+      <th>Metric</th>
+      <th>Value</th>
+      <th>Standard Range</th>
+      <th>Interpretation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr >
+      <td >Metric 1 (if unavailable, write "Not Available")</td>
+      <td >Value 1 (if unavailable, write "Not Available")</td>
+      <td >Standard Range 1 (if unavailable, write "Not Available")</td>
+      <td >Interpretation 1 (if unavailable, write "Not Available")</td>
+    </tr>
+    <tr>
+      <td >Metric 2 (if unavailable, write "Not Available")</td>
+      <td >Value 2 (if unavailable, write "Not Available")</td>
+      <td >Standard Range 2 (if unavailable, write "Not Available")</td>
+      <td >Interpretation 2 (if unavailable, write "Not Available")</td>
+    </tr>
+  
+    <tr >
+      <td >Metric N (if unavailable, write "Not Available")</td>
+      <td >Value N (if unavailable, write "Not Available")</td>
+      <td >Standard Range N (if unavailable, write "Not Available")</td>
+      <td >Interpretation N (if unavailable, write "Not Available")</td>
+    </tr>
+  </tbody>
+</table>
    Include every single metrics from the lab results and dont miss the single one.
 
-Detailed Analysis & Recommendations:
-
-  For each metric, provide a detailed explanation of what the value means for my health.
+ <h2> Detailed Analysis & Recommendations:</h2>
+    
+  For each metric, provide a detailed  in-depth explanation of what the value means for my health .
+  must add minimum 50 lines.
 
  Offer personalized dietary, lifestyle, and supplement recommendations. Please infuse recommended dietary changes and specific herbs that can be used to address specific health concerns based on widely available data that you can reference. Place a special focus on highly acclaimed Jamaican herbs. However, do not limit your herbal recommendations to Jamaican herbs only. If there are globally accepted herbal remedies that can be equally effective, you may recommend them also.
 
@@ -408,69 +452,81 @@ Detailed Analysis & Recommendations:
 
    Suggest any further tests or follow-up actions that might be needed for each identified concern.
 
-   Health Risk Assessment:
+   <h2> Health Risk Assessment:</h2>
 
  Evaluate the risk levels for all possible chronic conditions such as diabetes, cardiovascular diseases, liver diseases, kidney diseases, and cancer based on the lab results.
+ must add minimum 50 lines.
 
-      Tabular Insights:
+      <h2>Tabular Insights:</h2>
 
   Include numerical spreadsheet charts, where practical for key metrics, particularly for cholesterol levels, glucose levels, kidney function, electrolytes balance, liver function, prostate health, inflammation levels, iron levels, and vitamin D levels, etc.
-
-     Trends and Observations:
+          
+    <h2> Trends and Observations:</h2>
 
   Identify any trends in the data and their implications for the user's health.
+  must add minimum 50 lines.
 
-      Probability of Dysfunction:
+    <h2>  Probability of Dysfunction:</h2>
 
   Assess the probability of dysfunction in areas such as lipid panel, inflammation, acid-base balance, toxicity, heavy metals, and oxidative stress, etc.
+  must add minimum 50 lines.
 
-      What to Ask Your Doctor on Your Next Visit:
+    <h2>  What to Ask Your Doctor on Your Next Visit:</h2>
 
-  Provide a comprehensive list of specific, pointed questions I should ask my doctor based on the analysis of the lab results.
+  Provide a comprehensive list of specific, pointed questions I should ask my doctor based on the analysis of the lab results((minimum questions)).
 
    Break down this section into subheads that identify each stated health concern, and produce a set of specific questions for the doctor, for each stated concern.
 
-       Personalized Health Insights:
+     <h2>  Personalized Health Insights:</h2>
 
-   Tailor a set of useful insights to the user's specific age, gender, and health status
+   Tailor a set of useful insights to the user's specific age, gender, and health status.
+   must add minimum 50 lines
 
-       Lifestyle and Environmental Factors:
+      <h2> Lifestyle and Environmental Factors:</h2>
 
-   Consider how lifestyle factors such as smoking, alcohol consumption, physical activity, and environmental exposures may impact the lab results and overall health, and make relevant recommendations towards more positive outcomes
+   Consider how lifestyle factors such as smoking, alcohol consumption, physical activity, and environmental exposures may impact the lab results and overall health, and make relevant recommendations towards more positive outcomes.
+   must add minimum 50 lines
 
-  Genetic Predispositions:
+ <h2> Genetic Predispositions:</h2>
 
   If genetic data is available or mentioned, include insights on how genetic predispositions might affect the lab results and health risks.
+  must add minimum 50 lines.
 
-  Mental Health Indicators:
+ <h2> Mental Health Indicators:</h2>
 
   Assess potential indicators of mental health conditions such as stress, anxiety, and depression from relevant biomarkers if present in the lab report.
+  must add minimum 50 lines.
 
-   Immune System Function:
+ <h2>  Immune System Function:</h2>
 
    Evaluate the status of the immune system through markers such as white blood cell count and specific immune-related proteins.
-   Hydration Status:
+   must add minimum 50 lines.
+ <h2>  Hydration Status:</h2>
 
    Analyze hydration levels using metrics like blood urea nitrogen (BUN) and electrolytes.
 
-  Bone Health:
+<h2>  Bone Health:</h2>
   Include metrics related to bone health such as calcium levels, vitamin D levels, and other relevant markers.
+  must add minimum 50 lines.
 
- Hormonal Balance:
+ <h2>Hormonal Balance:</h2>
 
    Evaluate hormonal levels, including thyroid function, sex hormones, and adrenal function if relevant data is provided.
+   must add minimum 50 lines.
 
-   Gut Health:
+  <h2> Gut Health:</h2>
 
 Assess markers related to gut health and digestive function if stool tests or related data are available.
+must add minimum 50 lines.
 
 Possible Causes. For each health issue that is identified, you should add a paragraph that comprehensively outlines the possible causes of the issue, including eating habits, lifestyle, genetics etc.
 Implications of Procrastination  For each health issue that is identified, you should add a paragraph that comprehensively outlines  the real implications that exist, should the patient fail to act on the results and recommendations provided.
  
 
- Ensure each section is thorough, wordy, clearly explained, and provides actionable insights and recommendations. Please ensure that each health report contains a subhead entitled, Conclusion, that outlines in summary detail, the primary areas of concern and the recommended actions towards addressing these concerns.
- Never include this type of message :"This HTML code generates a structured health analysis report for a null patient, addressing all elements
-specified in the request while ensuring clarity and modern design."
+ 1.Ensure each section is thorough, wordy, clearly explained, and provides actionable insights and recommendations. Please ensure that each health report contains a subhead entitled, Conclusion, that outlines in summary detail, the primary areas of concern and the recommended actions towards addressing these concerns.
+ 2.Never include this type of any message :"This HTML code generates a structured health analysis report for a null patient, addressing all elementsspecified in the request while ensuring clarity and modern design."
+3.All the text should be black never include any other colors
+4.make sure all the sections are deeply explained make sure you give maximum response
 
 
 
@@ -480,7 +536,7 @@ specified in the request while ensuring clarity and modern design."
         },
         { role: "user", content: prompt },
       ],
-
+        
     });
 
     const reportContent = completion.choices[0].message?.content;
