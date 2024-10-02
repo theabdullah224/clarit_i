@@ -60,7 +60,7 @@ export async function POST(request: Request) {
         const match = text.match(regex);
         if (match) return match[1].trim();
       }
-      return null;
+      return "Not Availible";
     };
     const dateRegex = /\b(\d{1,2}[-\/\s]*[A-Za-z]{3,9}[-\/\s]*\d{2,4}(?:\s*\d{1,2}:\d{2}(?:[AP]M)?)?)\b/i;
 
@@ -377,7 +377,7 @@ The information provided in this summary offers a basic overview of your health 
 - Add padding and margins to create a minimalist layout with plenty of whitespace.
        
        Generate a comprehensive health analysis  and generate that in the following structured format.
-       <p><b>Comprehensive health analysis report for  ${name || "user"}  </b></p>
+       <h1><b>Comprehensive health analysis report </b></h1>
         <div>
         <b>  Patient Information:</b>
         <ul>
