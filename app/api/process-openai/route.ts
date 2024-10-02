@@ -362,28 +362,7 @@ Implications of Procrastination  For each health issue that is identified, you s
 
 `
     } else {
-      systemprompt = `Generate a basic summary report for the lab result and dont include any metrices from lab results in 6 to 7 lines. Ensure the output is formatted using HTML elements <p> 
-                        Use the following CSS classes and design guidelines to ensure readability and visual appeal:
-                        - Use a clean, modern font like "Roboto" or "Open Sans."
-                        - Apply  soft borders to tables for better readability.
-                        
-                        
-                        - Add padding and margins to create a minimalist layout with plenty of whitespace.
-                        Additional Paragraph: After every report, include the following paragraph:
-                       <p> Upgrade today for a Comprehensive Health Report
-The information provided in this summary offers a basic overview of your health status based on the uploaded lab results. For a more detailed, personalized analysis and a comprehensive report on your health, including actionable insights and recommendations tailored to your needs, upgrade to our COMPREHENSIVE INSIGHTS plan. Unlock access to a full breakdown of your results, trends over time, and advanced features designed to empower you on your health journey.</p>
-`
-    }
-
-    const prompt = `Lab Results: ${allText}`;
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Corrected model name
-      messages: [
-        {
-          role: "system",
-          content: `
-       Ensure the output is formatted using HTML elements like <h1>, <h2>, <table>, <th>, <td>, <p>, <ul>, and <li>. Use the following CSS classes and design guidelines to ensure readability and visual appeal:
+      systemprompt = `  Ensure the output is formatted using HTML elements like <h1>, <h2>, <table>, <th>, <td>, <p>, <ul>, and <li>. Use the following CSS classes and design guidelines to ensure readability and visual appeal:
 - Use a clean, modern font like "Roboto" or "Open Sans."
 - Apply  soft borders to tables for better readability.
 - Highlight recommendations 
@@ -439,92 +418,172 @@ The information provided in this summary offers a basic overview of your health 
     </tr>
   </tbody>
 </table>
-   Include every single metrics from the lab results and dont miss the single one.
+   Include only first 4 metrics from the lab results and dont miss the single one.
+          <h1>Summary:</h1>
+ Generate a basic summary report for the lab result and dont include any metrices from lab results in 6 to 7 lines. Ensure the output is formatted using HTML elements <p> 
+                        Use the following CSS classes and design guidelines to ensure readability and visual appeal:
+                        - Use a clean, modern font like "Roboto" or "Open Sans."
+                        - Apply  soft borders to tables for better readability.
+                        
+                        
+                        - Add padding and margins to create a minimalist layout with plenty of whitespace.
+                        Additional Paragraph: After every report, include the following paragraph:
+                       <p> Upgrade today for a Comprehensive Health Report
+The information provided in this summary offers a basic overview of your health status based on the uploaded lab results. For a more detailed, personalized analysis and a comprehensive report on your health, including actionable insights and recommendations tailored to your needs, upgrade to our COMPREHENSIVE INSIGHTS plan. Unlock access to a full breakdown of your results, trends over time, and advanced features designed to empower you on your health journey.</p>
 
- <h2> Detailed Analysis & Recommendations:</h2>
+`
+    }
+
+    const prompt = `Lab Results: ${allText}`;
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini", // Corrected model name
+      messages: [
+        {
+          role: "system",
+          content: `
+Ensure the output is formatted using HTML elements like <h1>, <h2>, <table>, <th>, <td>, <p>, <ul>, and <li>. Use the following CSS classes and design guidelines to ensure readability and visual appeal:
+- Use a clean, modern font like "Roboto" or "Open Sans."
+- Apply  soft borders to tables for better readability.
+- Highlight recommendations 
+- Include alternating row colors in tables for readability.
+- Add padding and margins to create a minimalist layout with plenty of whitespace.
+
+Generate a comprehensive health analysis  and generate that in the following structured format.
+<h1><b>Comprehensive health analysis report </b></h1>
+<div>
+<b>  Patient Information:</b>
+<ul>
+    <li>&nbsp;&nbsp;&nbsp;<b>Name:&nbsp;</b>${name} </li>
+    <li>&nbsp;&nbsp;&nbsp;<b>Age:&nbsp;</b>${age} </li>
+    <li>&nbsp;&nbsp;&nbsp;<b>Gender:&nbsp;</b>${gender} </li>
+    <li>&nbsp;&nbsp;&nbsp;<b>Sample ID:&nbsp;</b> ${sampleId}</li>
+    <li>&nbsp;&nbsp;&nbsp;<b>Date Collected:&nbsp;</b>${dateCollected} </li>
+    <li>&nbsp;&nbsp;&nbsp;<b>Doctor:&nbsp;</b>${doctor} </li>
+    <li>&nbsp;&nbsp;&nbsp;<b>Date of Report:&nbsp;</b> ${new Date().getDate().toString().padStart(2, '0')}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}-${new Date().getFullYear()} (${new Date().getHours() % 12 || 12}:${new Date().getMinutes().toString().padStart(2, '0')} ${new Date().getHours() >= 12 ? 'PM' : 'AM'})</li>
+</ul>
+</div>
+    <h1>Health Analysis Summary</h1>
     
-  For each metric, provide a detailed  in-depth explanation of what the value means for my health .
-  must add minimum 50 lines.
 
- Offer personalized dietary, lifestyle, and supplement recommendations. Please infuse recommended dietary changes and specific herbs that can be used to address specific health concerns based on widely available data that you can reference. Place a special focus on highly acclaimed Jamaican herbs. However, do not limit your herbal recommendations to Jamaican herbs only. If there are globally accepted herbal remedies that can be equally effective, you may recommend them also.
+<h2> Summary of Key Health Metrics</h2>
+<table >
+<thead>
+<tr >
+<th>Metric</th>
+<th>Value</th>
+<th>Standard Range</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr >
+<td >Metric 1 (if unavailable, write "Not Available")</td>
+<td >Value 1 (if unavailable, write "Not Available")</td>
+<td >Standard Range 1 (if unavailable, write "Not Available")</td>
+<td >Interpretation 1 (if unavailable, write "Not Available")</td>
+</tr>
+<tr>
+<td >Metric 2 (if unavailable, write "Not Available")</td>
+<td >Value 2 (if unavailable, write "Not Available")</td>
+<td >Standard Range 2 (if unavailable, write "Not Available")</td>
+<td >Interpretation 2 (if unavailable, write "Not Available")</td>
+</tr>
 
-  Incorporate an Alkaline Whole Foods approach to healing the body in these recommendations.
+<tr >
+<td >Metric N (if unavailable, write "Not Available")</td>
+<td >Value N (if unavailable, write "Not Available")</td>
+<td >Standard Range N (if unavailable, write "Not Available")</td>
+<td >Interpretation N (if unavailable, write "Not Available")</td>
+</tr>
+</tbody>
+</table>
+Include every single metrics from the lab results and dont miss the single one.
 
-   Suggest any further tests or follow-up actions that might be needed for each identified concern.
+<h2> Detailed Analysis & Recommendations:</h2>
 
-   <h2> Health Risk Assessment:</h2>
+For each metric, provide a detailed  in-depth explanation of what the value means for my health .
+must add minimum 50 lines.
 
- Evaluate the risk levels for all possible chronic conditions such as diabetes, cardiovascular diseases, liver diseases, kidney diseases, and cancer based on the lab results.
- must add minimum 50 lines.
+Offer personalized dietary, lifestyle, and supplement recommendations. Please infuse recommended dietary changes and specific herbs that can be used to address specific health concerns based on widely available data that you can reference. Place a special focus on highly acclaimed Jamaican herbs. However, do not limit your herbal recommendations to Jamaican herbs only. If there are globally accepted herbal remedies that can be equally effective, you may recommend them also.
 
-      <h2>Tabular Insights:</h2>
+Incorporate an Alkaline Whole Foods approach to healing the body in these recommendations.
 
-  Include numerical spreadsheet charts, where practical for key metrics, particularly for cholesterol levels, glucose levels, kidney function, electrolytes balance, liver function, prostate health, inflammation levels, iron levels, and vitamin D levels, etc.
-          
-    <h2> Trends and Observations:</h2>
+Suggest any further tests or follow-up actions that might be needed for each identified concern.
 
-  Identify any trends in the data and their implications for the user's health.
-  must add minimum 50 lines.
+<h2> Health Risk Assessment:</h2>
 
-    <h2>  Probability of Dysfunction:</h2>
+Evaluate the risk levels for all possible chronic conditions such as diabetes, cardiovascular diseases, liver diseases, kidney diseases, and cancer based on the lab results.
+must add minimum 50 lines.
 
-  Assess the probability of dysfunction in areas such as lipid panel, inflammation, acid-base balance, toxicity, heavy metals, and oxidative stress, etc.
-  must add minimum 50 lines.
+<h2>Tabular Insights:</h2>
 
-    <h2>  What to Ask Your Doctor on Your Next Visit:</h2>
+Include numerical spreadsheet charts, where practical for key metrics, particularly for cholesterol levels, glucose levels, kidney function, electrolytes balance, liver function, prostate health, inflammation levels, iron levels, and vitamin D levels, etc.
+  
+<h2> Trends and Observations:</h2>
 
-  Provide a comprehensive list of specific, pointed questions I should ask my doctor based on the analysis of the lab results((minimum questions)).
+Identify any trends in the data and their implications for the user's health.
+must add minimum 50 lines.
 
-   Break down this section into subheads that identify each stated health concern, and produce a set of specific questions for the doctor, for each stated concern.
+<h2>  Probability of Dysfunction:</h2>
 
-     <h2>  Personalized Health Insights:</h2>
+Assess the probability of dysfunction in areas such as lipid panel, inflammation, acid-base balance, toxicity, heavy metals, and oxidative stress, etc.
+must add minimum 50 lines.
 
-   Tailor a set of useful insights to the user's specific age, gender, and health status.
-   must add minimum 50 lines
+<h2>  What to Ask Your Doctor on Your Next Visit:</h2>
 
-      <h2> Lifestyle and Environmental Factors:</h2>
+Provide a comprehensive list of specific, pointed questions I should ask my doctor based on the analysis of the lab results((minimum questions)).
 
-   Consider how lifestyle factors such as smoking, alcohol consumption, physical activity, and environmental exposures may impact the lab results and overall health, and make relevant recommendations towards more positive outcomes.
-   must add minimum 50 lines
+Break down this section into subheads that identify each stated health concern, and produce a set of specific questions for the doctor, for each stated concern.
 
- <h2> Genetic Predispositions:</h2>
+<h2>  Personalized Health Insights:</h2>
 
-  If genetic data is available or mentioned, include insights on how genetic predispositions might affect the lab results and health risks.
-  must add minimum 50 lines.
+Tailor a set of useful insights to the user's specific age, gender, and health status.
+must add minimum 50 lines
 
- <h2> Mental Health Indicators:</h2>
+<h2> Lifestyle and Environmental Factors:</h2>
 
-  Assess potential indicators of mental health conditions such as stress, anxiety, and depression from relevant biomarkers if present in the lab report.
-  must add minimum 50 lines.
+Consider how lifestyle factors such as smoking, alcohol consumption, physical activity, and environmental exposures may impact the lab results and overall health, and make relevant recommendations towards more positive outcomes.
+must add minimum 50 lines
 
- <h2>  Immune System Function:</h2>
+<h2> Genetic Predispositions:</h2>
 
-   Evaluate the status of the immune system through markers such as white blood cell count and specific immune-related proteins.
-   must add minimum 50 lines.
- <h2>  Hydration Status:</h2>
+If genetic data is available or mentioned, include insights on how genetic predispositions might affect the lab results and health risks.
+must add minimum 50 lines.
 
-   Analyze hydration levels using metrics like blood urea nitrogen (BUN) and electrolytes.
+<h2> Mental Health Indicators:</h2>
+
+Assess potential indicators of mental health conditions such as stress, anxiety, and depression from relevant biomarkers if present in the lab report.
+must add minimum 50 lines.
+
+<h2>  Immune System Function:</h2>
+
+Evaluate the status of the immune system through markers such as white blood cell count and specific immune-related proteins.
+must add minimum 50 lines.
+<h2>  Hydration Status:</h2>
+
+Analyze hydration levels using metrics like blood urea nitrogen (BUN) and electrolytes.
 
 <h2>  Bone Health:</h2>
-  Include metrics related to bone health such as calcium levels, vitamin D levels, and other relevant markers.
-  must add minimum 50 lines.
+Include metrics related to bone health such as calcium levels, vitamin D levels, and other relevant markers.
+must add minimum 50 lines.
 
- <h2>Hormonal Balance:</h2>
+<h2>Hormonal Balance:</h2>
 
-   Evaluate hormonal levels, including thyroid function, sex hormones, and adrenal function if relevant data is provided.
-   must add minimum 50 lines.
+Evaluate hormonal levels, including thyroid function, sex hormones, and adrenal function if relevant data is provided.
+must add minimum 50 lines.
 
-  <h2> Gut Health:</h2>
+<h2> Gut Health:</h2>
 
 Assess markers related to gut health and digestive function if stool tests or related data are available.
 must add minimum 50 lines.
 
 Possible Causes. For each health issue that is identified, you should add a paragraph that comprehensively outlines the possible causes of the issue, including eating habits, lifestyle, genetics etc.
 Implications of Procrastination  For each health issue that is identified, you should add a paragraph that comprehensively outlines  the real implications that exist, should the patient fail to act on the results and recommendations provided.
- 
 
- 1.Ensure each section is thorough, wordy, clearly explained, and provides actionable insights and recommendations. Please ensure that each health report contains a subhead entitled, Conclusion, that outlines in summary detail, the primary areas of concern and the recommended actions towards addressing these concerns.
- 2.Never include this type of any message :"This HTML code generates a structured health analysis report for a null patient, addressing all elementsspecified in the request while ensuring clarity and modern design."
+
+1.Ensure each section is thorough, wordy, clearly explained, and provides actionable insights and recommendations. Please ensure that each health report contains a subhead entitled, Conclusion, that outlines in summary detail, the primary areas of concern and the recommended actions towards addressing these concerns.
+2.Never include this type of any message :"This HTML code generates a structured health analysis report for a null patient, addressing all elementsspecified in the request while ensuring clarity and modern design."
 3.All the text should be black never include any other colors
 4.make sure all the sections are deeply explained make sure you give maximum response
 
